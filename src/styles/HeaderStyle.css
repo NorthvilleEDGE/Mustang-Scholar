@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap');
+
+:root {
+    --orange: rgb(255, 100, 0);
+    --gray: #808080;
+}
+
+* {
+    font-family: 'Ubuntu', sans-serif;
+    background-color: var(--gray);
+    color: var(--gray);
+}
+
+.header {
+    font-size: 30px;
+    background-color: #4d4d4d;
+    padding: 20px;
+    color: #FE7F2D;
+    border-bottom: 2px solid #000000; /* Add this line to create a bottom border */
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.header-buttons button {
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: black;
+    color: #FE7F2D;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px; /* This makes the buttons oval-shaped */
+}
