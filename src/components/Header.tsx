@@ -4,7 +4,7 @@ import '../styles/HeaderStyle.css';
 function Header() {
   return (
     <header className="header">
-      <h1>Mustang Scholar</h1>
+      <h1 className="animated-gradient-text">Mustang Scholar</h1>
       <div className="header-buttons">
         <Link to="/">Home</Link>
         <Link to="/clubs">Clubs</Link>

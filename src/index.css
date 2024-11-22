@@ -2,7 +2,9 @@
 
 :root {
     --orange: rgb(255, 100, 0);
-    --black: #111111;
+    --light-orange: rgb(255, 150, 0);
+    --black: #000000;
+    --gray: #111111;
     --white: #ffffff;
 
     --extra-bold: 600;
@@ -25,4 +27,19 @@ body {
     background-color: var(--black);
 }
 
+@keyframes gradientText {
+    0% {
+        background-position: 300% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
+.animated-gradient-text {
+    background: linear-gradient(90deg, var(--orange), var(--light-orange), var(--orange));
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 5s linear infinite;
+}
