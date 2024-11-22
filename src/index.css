@@ -4,8 +4,9 @@
     --orange: rgb(255, 100, 0);
     --light-orange: rgb(255, 150, 0);
     --black: #000000;
-    --gray: #111111;
+    --dark-gray: #222222;
     --white: #ffffff;
+    --light-gray: #aaaaaa;
 
     --extra-bold: 600;
     --bold: 500;
@@ -34,12 +35,4 @@ body {
     100% {
         background-position: 0% 50%;
     }
-}
-
-.animated-gradient-text {
-    background: linear-gradient(90deg, var(--orange), var(--light-orange), var(--orange));
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientText 5s linear infinite;
 }

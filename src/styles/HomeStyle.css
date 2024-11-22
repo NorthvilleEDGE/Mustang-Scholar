@@ -1,0 +1,54 @@
+.homeHeader h1,
+.homeHeader h1 span {
+    font-size: 70px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.gradientText {
+    background: linear-gradient(90deg, var(--orange), var(--light-orange), var(--orange));
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 5s linear infinite;
+    font-weight: var(--extra-bold);
+}
+
+.homeHeader h2 {
+    font-size: 30px;
+    color: var(--light-gray);
+    margin: 20px 0;
+    text-align: center;
+}
+
+.homeBody p {
+    text-indent: 40px; /* Indent the first line of each paragraph */
+    margin: 20px 0;
+    
+}
+
+.homeBody {
+    background-color: var(--dark-gray);
+    padding: 15px;
+    border-radius: 30px;
+    width: 50%;
+    margin: 20px;
+}
+
+.homeBody a {
+    text-decoration: underline;
+    text-decoration-color: orange; /* Change underline color when not on hover */
+}
+
+.homeBody a:hover {
+    color: var(--orange);
+    text-decoration: underline;
+}
+
+.homeFooter p {
+    font-size: 30px;
+}
+
+.homeFooter a {
+    font-size: 30px; /* Match the size of "here" with the other text in the footer */
+}
