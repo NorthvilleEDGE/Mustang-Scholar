@@ -16,11 +16,9 @@ function Home() {
             and trying to make sense of all the available options. That's where we come in. Our website 
             streamlines the process by organizing course information into a simple, user-friendly format.
           </p>
-          <div className="button-container">
             <Link to="/courses" className="action-button">
               Get Started
             </Link>
-          </div>
         </div>
       </section>
 

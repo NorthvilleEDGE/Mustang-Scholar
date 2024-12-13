@@ -95,6 +95,8 @@
 }
 
 .text-content {
+    background-color: var(--dark-gray);
+    border-radius: 20px;
     flex: 1;
     padding: 20px;
 }

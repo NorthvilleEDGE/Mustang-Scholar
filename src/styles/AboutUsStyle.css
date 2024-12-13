@@ -1,0 +1,100 @@
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.about-header {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.about-header h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.mission-section,
+.vision-section,
+.team-section {
+  margin: 60px 0;
+}
+
+.content-box {
+  background-color: var(--dark-gray);
+  padding: 40px;
+  border-radius: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.content-box h2 {
+  color: var(--orange);
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  display: inline-block;
+  background: linear-gradient(90deg, var(--orange), var(--light-orange));
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: var(--bold);
+  margin-top: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+.team-content {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.team-content .content-box {
+  flex: 2;
+  margin: 0;
+}
+
+.logo-box {
+  flex: 1;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.edge-logo {
+  width: 100%;
+  height: auto;
+  max-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .team-content {
+    flex-direction: column;
+  }
+  
+  .logo-box {
+    width: 100%;
+    min-height: 200px;
+  }
+  
+  .edge-logo {
+    max-width: 200px;
+  }
+}

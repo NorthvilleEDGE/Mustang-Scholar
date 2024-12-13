@@ -5,6 +5,7 @@ import Courses from './pages/Courses'
 import Clubs from './pages/Clubs'
 import Recommendations from './pages/Recommendations'
 import Testing from './pages/Testing'
+import AboutUs from './pages/AboutUs'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/recommendations" element={<Recommendations />} />
         <Route path="/testing" element={<Testing />} />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
     </Router>
   )
