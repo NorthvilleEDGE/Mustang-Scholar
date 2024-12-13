@@ -30,7 +30,7 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
       </Routes>
       <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
-      <ChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />
     </Router>
   )
 }

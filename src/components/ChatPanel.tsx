@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanelStyle.css';
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 interface ChatPanelProps {
   isOpen: boolean;
@@ -19,6 +23,7 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -29,6 +34,23 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  const generateResponse = async (userInput: string): Promise<string> => {
+    try {
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      
+      const prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
+      You should provide personalized recommendations and advice about courses and extracurricular activities.
+      Keep responses concise and friendly. Current user message: ${userInput}`;
+
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+    } catch (error) {
+      console.error('Error generating response:', error);
+      return 'I apologize, but I encountered an error. Please try again.';
+    }
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (inputText.trim() === '') return;
@@ -38,20 +60,39 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
     setInputText('');
     setIsTyping(true);
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await generateResponse(inputText);
+      const botResponse = {
+        text: response,
+        sender: 'bot' as const,
+        id: Date.now() + 1
+      };
+      setIsTyping(false);
+      setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Error:', error);
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        text: "I apologize, but I encountered an error. Please try again.",
+        sender: 'bot',
+        id: Date.now() + 1
+      }]);
+    }
+  };
 
-    const botResponse = {
-      text: "I'm still under development, but I'll be able to help you with course and club recommendations soon!",
-      sender: 'bot' as const,
-      id: Date.now() + 1
-    };
-    setIsTyping(false);
-    setMessages(prev => [...prev, botResponse]);
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
-    <div className={`chat-panel ${isOpen ? 'open' : ''}`}>
+    <div className={`chat-panel ${isOpen ? 'open' : ''} ${isExpanded ? 'expanded' : ''}`}>
+      <button 
+        className="expand-toggle"
+        onClick={toggleExpand}
+        aria-label={isExpanded ? 'Collapse chat' : 'Expand chat'}
+      >
+        {isExpanded ? '▶' : '◀'}
+      </button>
       <div className="chat-panel-content">
         <div className="chat-panel-header">
           <h2>Chat Assistant</h2>
