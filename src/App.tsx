@@ -1,4 +1,5 @@
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
 import Header from './components/Header'
 import Home from './pages/Home'
 import Courses from './pages/Courses'
@@ -6,8 +7,17 @@ import Clubs from './pages/Clubs'
 import Recommendations from './pages/Recommendations'
 import Testing from './pages/Testing'
 import AboutUs from './pages/AboutUs'
+import ChatButton from './components/ChatButton'
+import ChatPanel from './components/ChatPanel'
+
 
 function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
   return (
     <Router>
       <Header />
@@ -19,6 +29,8 @@ function App() {
         <Route path="/testing" element={<Testing />} />
         <Route path="/about" element={<AboutUs />} />
       </Routes>
+      <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
+      <ChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </Router>
   )
 }
