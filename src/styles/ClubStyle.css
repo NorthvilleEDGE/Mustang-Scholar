@@ -1,0 +1,46 @@
+.clubs-list {
+    margin: 40px 0;
+}
+
+.club-item {
+    background-color: var(--dark-gray);
+    padding: 20px;
+    border-radius: 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid var(--light-gray);
+    overflow: hidden;
+}
+
+.club-item:hover {
+    box-shadow: 0 0 30px var(--orange);
+    border-color: var(--orange);
+}
+
+.club-item h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--light-orange);
+}
+
+.club-item .club-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.club-item .dropdown-arrow {
+    font-size: 1.5rem;
+    color: var(--light-orange);
+}
+
+.club-item.active {
+    border-color: var(--orange);
+}
+
+.club-description {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: var(--light-gray);
+}

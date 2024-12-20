@@ -5,7 +5,6 @@ import Home from './pages/Home'
 import Courses from './pages/Courses'
 import Clubs from './pages/Clubs'
 import Recommendations from './pages/Recommendations'
-import Testing from './pages/Testing'
 import AboutUs from './pages/AboutUs'
 import ChatButton from './components/ChatButton'
 import ChatPanel from './components/ChatPanel'
@@ -26,7 +25,6 @@ function App() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/recommendations" element={<Recommendations />} />
-        <Route path="/testing" element={<Testing />} />
         <Route path="/about" element={<AboutUs />} />
       </Routes>
       <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
