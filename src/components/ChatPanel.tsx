@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanelStyle.css';
+import { fetchClubs, Club } from '../api';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -24,6 +25,7 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [clubs, setClubs] = useState<Club[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -34,13 +36,31 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  useEffect(() => {
+    const getClubs = async () => {
+      const clubsData = await fetchClubs();
+      setClubs(clubsData);
+    };
+    getClubs();
+  }, []);
+
   const generateResponse = async (userInput: string): Promise<string> => {
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       
+      const conversationHistory = messages.map(message => `${message.sender}: ${message.text}`).join('\n');
+      const clubsInfo = clubs.map(club => `${club.name}: ${club.description}`).join('\n');
       const prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
       You should provide personalized recommendations and advice about courses and extracurricular activities.
-      Keep responses concise and friendly. Current user message: ${userInput}`;
+      Keep responses concise and friendly.
+      
+      Here is the conversation history:
+      ${conversationHistory}
+      
+      Here are the available clubs:
+      ${clubsInfo}
+      
+      Current user message: ${userInput}`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
