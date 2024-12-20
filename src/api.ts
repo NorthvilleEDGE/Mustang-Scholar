@@ -1,4 +1,4 @@
-const CLUBS_SHEETY_API_URL = import.meta.env.VITE_CLUBS_SHEETY_API_URL;
+const SHEETY_API_URL = import.meta.env.VITE_SHEETY_API_URL;
 
 export interface Club {
   email: string;
@@ -8,7 +8,7 @@ export interface Club {
 
 export const fetchClubs = async (): Promise<Club[]> => {
   try {
-    const response = await fetch(CLUBS_SHEETY_API_URL);
+    const response = await fetch(SHEETY_API_URL + "/clubs");
     const json = await response.json();
     return json.clubs;
   } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanelStyle.css';
@@ -122,7 +123,7 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
           {messages.map((message) => (
             <div key={message.id} className={`message ${message.sender} animate-message`}>
               <div className="message-content">
-                {message.text}
+                <ReactMarkdown>{message.text}</ReactMarkdown>
               </div>
             </div>
           ))}

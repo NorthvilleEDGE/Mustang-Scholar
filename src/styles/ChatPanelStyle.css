@@ -124,6 +124,42 @@
   border-bottom-right-radius: 5px;
 }
 
+.message-content p {
+  margin: 0;
+}
+
+.message-content h1,
+.message-content h2,
+.message-content h3,
+.message-content h4,
+.message-content h5,
+.message-content h6 {
+  margin: 0;
+  font-weight: bold;
+}
+
+.message-content ul,
+.message-content ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.message-content li {
+  margin-bottom: 5px;
+}
+
+.message-content a {
+  color: var(--light-orange);
+  text-decoration: underline;
+}
+
+.message-content code {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .chat-panel-input {
   padding: 15px;
   background-color: rgba(0, 0, 0, 0.2);
