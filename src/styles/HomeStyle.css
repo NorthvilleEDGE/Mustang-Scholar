@@ -130,16 +130,6 @@
     transform: scale(1.02);
 }
 
-.creators-section {
-    margin: 60px 0;
-    text-align: center;
-}
-
-.creators-section .content-box {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
 .button-container {
     display: flex;
     justify-content: center;

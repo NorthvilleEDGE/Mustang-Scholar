@@ -62,9 +62,8 @@ function Home() {
         <div className="clubs-container">
           <div className="text-content">
             <p>
-              But that's not all. High school is more than just classes—it's also about community and 
-              finding your place. That's why we've compiled a comprehensive list of all the clubs available 
-              at your school. Whether you're into STEM, drama, art, or something entirely unique, our 
+              High school is more than just classes—it's also about community and 
+              finding your place. Whether you're into STEM, drama, art, or something entirely unique, our 
               platform helps you discover opportunities to connect with others and pursue what excites you most.
             </p>
             <Link to="/clubs" className="action-button">
@@ -94,16 +93,6 @@ function Home() {
               <rect x="70" y="130" width="60" height="30" rx="15" fill="url(#clubGradient)" opacity="0.7" />
             </svg>
           </div>
-        </div>
-      </section>
-
-      <section className="creators-section">
-        <div className="content-box">
-          <p>
-            Created by Brody Holm, Pedro Candido de Sousa, and Matthew McClure, this website is built 
-            with students in mind, giving you the tools to explore, organize, and thrive in your high 
-            school journey.
-          </p>
         </div>
       </section>
     </div>
