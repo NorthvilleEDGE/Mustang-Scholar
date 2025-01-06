@@ -26,6 +26,14 @@
     color: var(--white);
 }
 
+a {
+    transition: 0.3s;
+}
+
+a:hover {
+    color: var(--orange);
+}
+
 body {
     background-color: var(--black);
 }

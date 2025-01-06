@@ -20,22 +20,23 @@ function Clubs() {
 
   return (
     <div className="home-container">
-      <h1 className="homeHeader">Clubs</h1>
       <div className="clubs-list">
         {clubs.map((club, index) => (
           <div 
             key={index} 
             className={`club-item ${activeIndex === index ? 'active' : ''}`} 
-            onClick={() => handleToggle(index)}
           >
             <div className="club-header">
               <h2>{club.name}</h2>
-              <span className="dropdown-arrow">{activeIndex === index ? '▲' : '▼'}</span>
+              <span
+                className="dropdown-arrow"
+                onClick={() => handleToggle(index)}
+              >{activeIndex === index ? '▲' : '▼'}</span>
             </div>
             {activeIndex === index && (
               <div className="club-description">
                 <p>{club.description}</p>
-                <p>Contact: {club.email}</p>
+                <p>Contact: <a href={`mailto:${club.email}`}>{club.email}</a></p>
               </div>
             )}
           </div>
