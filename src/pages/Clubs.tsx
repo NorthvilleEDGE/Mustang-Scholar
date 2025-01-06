@@ -36,7 +36,9 @@ function Clubs() {
             {activeIndex === index && (
               <div className="club-description">
                 <p>{club.description}</p>
-                <p>Contact: <a href={`mailto:${club.email}`}>{club.email}</a></p>
+                <p>Officer: <span>{club.officer}</span></p>
+                <p>Officer Email: <a href={`mailto:${club.email}`}>{club.email}</a></p>
+                <p>Advisor: <span>{club.advisor}</span></p>
               </div>
             )}
           </div>

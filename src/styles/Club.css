@@ -20,6 +20,7 @@
 .club-item h2 {
     margin: 0;
     font-size: 1.5rem;
+    font-weight: var(--bold);
     color: var(--light-orange);
 }
 
@@ -53,4 +54,18 @@
 
 .club-description p {
     margin: 10px 0;
+}
+
+.club-description p span {
+    font-weight: var(--bold);
+    color: var(--light-orange);
+}
+
+.club-description p a {
+    font-weight: var(--bold);
+    color: var(--light-orange);
+}
+
+.club-description p a:hover {
+    color: var(--orange);
 }

@@ -2,6 +2,8 @@ const SHEETY_API_URL = import.meta.env.VITE_SHEETY_API_URL;
 
 export interface Club {
   email: string;
+  officer: string;
+  advisor: string;
   name: string;
   description: string;
 }
