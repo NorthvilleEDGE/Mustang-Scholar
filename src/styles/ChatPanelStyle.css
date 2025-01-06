@@ -113,7 +113,7 @@
 }
 
 .message.bot .message-content {
-  background-color: var(--orange);
+  background-color: var(--dark-orange);
   color: white;
   border-bottom-left-radius: 5px;
 }
