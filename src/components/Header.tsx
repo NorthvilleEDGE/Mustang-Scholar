@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import '../styles/HeaderStyle.css';
+import '../styles/Header.css';
 
 function Header() {
   return (
     <header className="header">
-      <h1 className="animated-gradient-text">Mustang Scholar</h1>
+      <Link to="/" className="title">Mustang Scholar</Link>
       <div className="header-buttons">
         <Link to="/">Home</Link>
-        <Link to="/clubs">Clubs</Link>
         <Link to="/courses">Courses</Link>
-        <Link to="/recommendations">Recommendations</Link>
+        <Link to="/clubs">Clubs</Link>
+        <Link to="/recommender">Recommender</Link>
         <Link to="/about">About Us</Link>
       </div>
     </header>

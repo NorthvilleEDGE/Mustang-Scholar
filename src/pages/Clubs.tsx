@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchClubs, Club } from '../api';
-import '../styles/ClubStyle.css';
+import '../styles/Club.css';
 
 function Clubs() {
   const [clubs, setClubs] = useState<Club[]>([]);

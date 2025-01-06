@@ -7,10 +7,15 @@
     border-bottom: 2px solid var(--white);
 }
 
-.header h1 {
+.header .title {
     color: var(--white);
     font-size: 30px;
-    margin-right: 40px;
+    text-decoration: none;
+}
+
+.header .title:hover {
+    color: var(--orange);
+    scale: 1.05;
 }
 
 .header-buttons {

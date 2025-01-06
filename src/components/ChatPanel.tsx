@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
-import '../styles/ChatPanelStyle.css';
+import '../styles/ChatPanel.css';
 import { fetchClubs, Club } from '../api';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;

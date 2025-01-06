@@ -1,4 +1,4 @@
-import '../styles/ChatButtonStyle.css';
+import '../styles/ChatButton.css';
 
 interface ChatButtonProps {
   isOpen: boolean;
