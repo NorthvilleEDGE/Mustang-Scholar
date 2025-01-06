@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/ChatButtonStyle.css';
 
 interface ChatButtonProps {
