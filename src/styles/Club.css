@@ -50,6 +50,19 @@
     margin-top: 10px;
     font-size: 1.1rem;
     color: var(--light-gray);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.club-description .club-details {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.club-description .club-flyer {
+    flex: 1;
+    max-width: 500px;
 }
 
 .club-description p {
@@ -68,4 +81,19 @@
 
 .club-description p a:hover {
     color: var(--orange);
+}
+
+@media (max-width: 768px) {
+  .club-description {
+    flex-direction: column;
+  }
+
+  .club-description .club-details {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .club-description .club-flyer {
+    max-width: 100%;
+  }
 }

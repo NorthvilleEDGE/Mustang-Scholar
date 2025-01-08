@@ -6,6 +6,7 @@ export interface Club {
   advisor: string;
   name: string;
   description: string;
+  flyer: string;
 }
 
 export const fetchClubs = async (): Promise<Club[]> => {
