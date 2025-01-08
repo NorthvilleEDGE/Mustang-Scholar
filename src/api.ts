@@ -1,4 +1,4 @@
-const SHEETY_API_URL = import.meta.env.VITE_SHEETY_API_URL;
+const SHEETS_API_URL = import.meta.env.VITE_SHEETS_API_URL;
 
 export interface Club {
   email: string;
@@ -10,9 +10,12 @@ export interface Club {
 
 export const fetchClubs = async (): Promise<Club[]> => {
   try {
-    const response = await fetch(SHEETY_API_URL + "/clubs");
-    const json = await response.json();
-    return json.clubs;
+    const response = await fetch(SHEETS_API_URL);
+    if (!response.ok) {
+      throw new Error('Network response was not okay');
+    }
+    const clubs = await response.json();
+    return clubs;
   } catch (error) {
     console.error('Error fetching clubs data:', error);
     return [];
