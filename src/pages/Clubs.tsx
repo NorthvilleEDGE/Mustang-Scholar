@@ -50,7 +50,9 @@ function Clubs() {
                     <p>Officer: <span>{club.officer}</span></p>
                     <p>Officer Email: <a href={`mailto:${club.email}`}>{club.email}</a></p>
                     <p>Advisor: <span>{club.advisor}</span></p>
-                    <a href={club.flyer}>Link to flyer</a>
+                    {club.flyer && (
+                        <a href={club.flyer} target="_blank" rel="noopener noreferrer">View Flyer</a>
+                    )}
                   </div>
                   {club.flyer && (
                     <div className="club-flyer">
