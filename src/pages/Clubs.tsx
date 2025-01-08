@@ -87,7 +87,7 @@ function Clubs() {
                         <iframe 
                           src={getDriveViewerUrl(club.flyer)} 
                           width="100%" 
-                          height="600px" 
+                          height="650px" 
                           title="Flyer"
                         ></iframe>
                       </div>
