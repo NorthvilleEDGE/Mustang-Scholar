@@ -110,6 +110,7 @@
   border-radius: 15px;
   font-size: 0.9rem;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .message.bot .message-content {
@@ -149,8 +150,11 @@
 }
 
 .message-content a {
-  color: var(--light-orange);
   text-decoration: underline;
+}
+
+.message-content a:hover {
+  color: var(--light-orange);
 }
 
 .message-content code {

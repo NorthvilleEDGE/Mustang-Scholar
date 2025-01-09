@@ -21,7 +21,7 @@ interface Message {
 
 function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([
-    { text: 'Hi! I\'m your Mustang Scholar Assistant. How can I help you today?', sender: 'bot', id: 1 }
+    { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -50,10 +50,10 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       
       const conversationHistory = messages.map(message => `${message.sender}: ${message.text}`).join('\n');
-      const clubsInfo = clubs.map(club => `${club.name}: ${club.description}`).join('\n');
+      const clubsInfo = clubs.map(club => `${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}`).join('\n');
       const prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
       You should provide personalized recommendations and advice about courses and extracurricular activities.
-      Keep responses concise and friendly.
+      Keep responses concise and friendly. Ensure all URLs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
       
       Here is the conversation history:
       ${conversationHistory}
