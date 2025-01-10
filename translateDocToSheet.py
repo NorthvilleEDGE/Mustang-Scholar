@@ -2,7 +2,6 @@ import gspread
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 import re
-import requests
 
 # Define the scope and credentials
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
@@ -37,7 +36,7 @@ def extract_course_info(doc_content):
                 courses.append(course)
                 course = {}
             course['title'] = lines[i-1].strip()
-            course['course_number'] = line.split("COURSE #:")[1].strip()
+            course['course_number'] = line.split("COURSE #: ")[1].strip()
         elif "prerequisites:" in line.lower():
             course['prerequisites'] = line.split("prerequisites:")[1].strip()
         elif "recommend" in line.lower():
