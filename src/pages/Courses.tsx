@@ -67,7 +67,7 @@ function Courses() {
 
   const renderBadges = (course: Course) => (
     <div className="course-badges">
-      <span className="badge honors">{course.type}</span>
+      <span className={`badge ${course.type.toLowerCase()}`}>{course.type}</span>
       {course.ncaa && <span className="badge ncaa">NCAA</span>}
       {course.mmcvpaa && <span className="badge vpaa">VPAA</span>}
     </div>
