@@ -4,6 +4,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanel.css';
 import { fetchClubs, Club } from '../api';
+import { useData } from '../context/DataContext';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -20,13 +21,13 @@ interface Message {
 }
 
 function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
+  const { clubs } = useData();
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [clubs, setClubs] = useState<Club[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -36,14 +37,6 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-
-  useEffect(() => {
-    const getClubs = async () => {
-      const clubsData = await fetchClubs();
-      setClubs(clubsData);
-    };
-    getClubs();
-  }, []);
 
   const generateResponse = async (userInput: string): Promise<string> => {
     try {

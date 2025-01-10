@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchCourses } from '../api';
 import '../styles/Courses.css';
+import { useData } from '../context/DataContext';
 
 interface Course {
   name: string,
@@ -15,20 +16,10 @@ interface Course {
 }
 
 function Courses() {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const { courses, loading } = useData();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-
-  useEffect(() => {
-    const getCourses = async () => {
-      const coursesData = await fetchCourses();
-      setCourses(coursesData);
-      setLoading(false);
-    };
-    getCourses();
-  }, []);
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);

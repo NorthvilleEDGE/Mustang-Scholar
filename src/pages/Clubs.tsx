@@ -1,21 +1,12 @@
 import { useEffect, useState } from 'react';
 import { fetchClubs, Club } from '../api';
 import '../styles/Club.css';
+import { useData } from '../context/DataContext';
 
 function Clubs() {
-  const [clubs, setClubs] = useState<Club[]>([]);
+  const { clubs, loading } = useData();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    const getClubs = async () => {
-      const clubsData = await fetchClubs();
-      setClubs(clubsData);
-      setLoading(false);
-    };
-    getClubs();
-  }, []);
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);

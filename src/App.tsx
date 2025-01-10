@@ -8,6 +8,7 @@ import Recommendations from './pages/Recommendations'
 import AboutUs from './pages/AboutUs'
 import ChatButton from './components/ChatButton'
 import ChatPanel from './components/ChatPanel'
+import { DataProvider } from './context/DataContext'
 
 
 function App() {
@@ -18,18 +19,20 @@ function App() {
   };
 
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/clubs" element={<Clubs />} />
-        <Route path="/recommendations" element={<Recommendations />} />
-        <Route path="/about" element={<AboutUs />} />
-      </Routes>
-      <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
-      <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />
-    </Router>
+    <DataProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/clubs" element={<Clubs />} />
+          <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/about" element={<AboutUs />} />
+        </Routes>
+        <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
+        <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />
+      </Router>
+    </DataProvider>
   )
 }
 
