@@ -1,19 +1,17 @@
 import { useEffect, useState } from 'react';
-import { fetchCourses, Course } from '../api';
-import '../styles/Course.css';
+import { fetchCourses } from '../api';
+import '../styles/Courses.css';
 
 interface Course {
-  courseName: string;
-  courseNumber: string;
-  prerequisite: string;
-  duration: string;
-  description: string;
-  department: string;
-  isAP: boolean;
-  isIB: boolean;
-  isHonors: boolean;
-  isNCAAApproved: boolean;
-  qualifiesVPAA: boolean;
+  name: string,
+  number: string,
+  prerequisite: string,
+  duration: string,
+  description: string,
+  department: string,
+  type: string,
+  ncaa: string,
+  mmcvpaa: string,
 }
 
 function Courses() {
@@ -56,8 +54,8 @@ function Courses() {
 
   const filteredCourses = courses.filter(course => {
     const matchesSearch = 
-      course.courseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.courseNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (course.prerequisite && course.prerequisite.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -69,11 +67,9 @@ function Courses() {
 
   const renderBadges = (course: Course) => (
     <div className="course-badges">
-      {course.isAP && <span className="badge ap">AP</span>}
-      {course.isIB && <span className="badge ib">IB</span>}
-      {course.isHonors && <span className="badge honors">Honors</span>}
-      {course.isNCAAApproved && <span className="badge ncaa">NCAA</span>}
-      {course.qualifiesVPAA && <span className="badge vpaa">VPAA</span>}
+      <span className="badge honors">{course.type}</span>
+      {course.ncaa && <span className="badge ncaa">NCAA</span>}
+      {course.mmcvpaa && <span className="badge vpaa">VPAA</span>}
     </div>
   );
 
@@ -117,9 +113,9 @@ function Courses() {
               >
                 <div className="course-header" onClick={() => handleToggle(index)}>
                   <div className="course-title">
-                    <h2>{highlightText(course.courseName, searchQuery)}</h2>
+                    <h2>{highlightText(course.name, searchQuery)}</h2>
                     <span className="course-number">
-                      {course.courseNumber !== 'N/A' && highlightText(course.courseNumber, searchQuery)}
+                      {course.number !== 'N/A' && highlightText(course.number, searchQuery)}
                     </span>
                   </div>
                   {renderBadges(course)}
@@ -153,11 +149,9 @@ function Courses() {
                       <div className="course-requirements">
                         <h3>Course Designations</h3>
                         <ul>
-                          {course.isAP && <li>Advanced Placement (AP) Course</li>}
-                          {course.isIB && <li>International Baccalaureate (IB) Course</li>}
-                          {course.isHonors && <li>Honors Course</li>}
-                          {course.isNCAAApproved && <li>NCAA Approved Course</li>}
-                          {course.qualifiesVPAA && <li>Qualifies for .50 MMC-VPAA Requirements</li>}
+                          <li>{course.type}</li>
+                          {course.ncaa && <li>NCAA Approved Course</li>}
+                          {course.mmcvpaa && <li>Qualifies for .50 MMC-VPAA Requirements</li>}
                         </ul>
                       </div>
                     </div>
