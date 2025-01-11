@@ -10,15 +10,20 @@ export interface Club {
 }
 
 export interface Course {
-  name: string;
-  number: string;
-  prerequisite: string;
-  duration: string;
-  description: string;
-  department: string;
-  type: string;
-  ncaa: string;
-  mmcvpaa: string;
+  name: string,
+  type: string,
+  number: string,
+  department: string,
+  ncaa: string,
+  vpaa: string,
+  prerequisites: string,
+  duration: string,
+  description: string,
+  recommend: string,
+  notes: string,
+  pe: string,
+  health: string,
+  video: string,
 }
 
 export const fetchClubs = async (): Promise<Club[]> => {

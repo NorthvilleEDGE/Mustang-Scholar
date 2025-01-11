@@ -115,52 +115,42 @@
 .badge {
     padding: 4px 8px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
+    color: #000000;
 }
 
 .badge.ap {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: #00ccffcc;
 }
 
 .badge.ib {
-    background-color: #f3e5f5;
-    color: #7b1fa2;
+    background-color: #ff55aacc;
 }
 
 .badge.honors {
-    background-color: #fff3e0;
-    color: #f57c00;
+    background-color: #00ffaacc;
 }
 
 .badge.ncaa {
-    background-color: #e8f5e9;
-    color: #388e3c;
+    background-color: #ff8800cc;
 }
 
 .badge.vpaa {
-    background-color: #fce4ec;
-    color: #c2185b;
+    background-color: #ffcc00cc;
 }
 
-/* New style for regular courses */
 .badge.regular {
-    background-color: #e0f7fa;
-    color: #00796b;
+    background-color: #ffffffcc;
 }
 
-/* New style for AP courses */
-.badge.ap {
-    background-color: #e3f2fd;
-    color: #1976d2;
+.badge.pe {
+    background-color: #ff5555cc;
 }
 
-/* New style for Honors courses */
-.badge.honors {
-    background-color: #fff3e0;
-    color: #f57c00;
+.badge.health {
+    background-color: #ff5555cc;
 }
 
 .dropdown-arrow {
@@ -185,16 +175,14 @@
 }
 
 .course-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
+    display: flex;
     margin-bottom: 24px;
 }
 
 .info-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    margin-right: 50px;
 }
 
 .info-item.club {
@@ -258,7 +246,7 @@
     background: var(--black);
     border-radius: 4px;
     font-size: 14px;
-    color: var(--orange);
+    color: var(--light-gray);
 }
 
 .highlight {

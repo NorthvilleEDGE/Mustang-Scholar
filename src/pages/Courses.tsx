@@ -2,16 +2,21 @@ import { useState } from 'react';
 import '../styles/Lists.css';
 import { useData } from '../context/DataContext';
 
-interface Course {
+export interface Course {
   name: string,
+  type: string,
   number: string,
-  prerequisite: string,
+  department: string,
+  ncaa: string,
+  vpaa: string,
+  prerequisites: string,
   duration: string,
   description: string,
-  department: string,
-  type: string,
-  ncaa: string,
-  mmcvpaa: string,
+  recommend: string,
+  notes: string,
+  pe: string,
+  health: string,
+  video: string,
 }
 
 function Courses() {
@@ -22,10 +27,6 @@ function Courses() {
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
-  };
-
-  const formatValue = (value: string): string => {
-    return value === 'N/A' ? 'None' : value;
   };
 
   const departments = [...new Set(courses.map(course => course.department))].sort();
@@ -48,7 +49,7 @@ function Courses() {
       course.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (course.prerequisite && course.prerequisite.toLowerCase().includes(searchQuery.toLowerCase()));
+      (course.prerequisites && course.prerequisites.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const matchesDepartment = !selectedDepartment || course.department === selectedDepartment;
 
@@ -57,9 +58,11 @@ function Courses() {
 
   const renderBadges = (course: Course) => (
     <div className="course-badges">
-      <span className={`badge ${course.type.toLowerCase()}`}>{course.type}</span>
-      {course.ncaa && <span className="badge ncaa">NCAA</span>}
-      {course.mmcvpaa && <span className="badge vpaa">VPAA</span>}
+      {course.type !== "Regular" && <span className={`badge ${course.type.toLowerCase()}`}>{course.type}</span>}
+      {course.ncaa === "Yes" && <span className="badge ncaa">NCAA</span>}
+      {course.vpaa ==="Yes" && <span className="badge vpaa">VPAA</span>}
+      {course.pe === "Yes" && <span className="badge pe">PE</span>}
+      {course.health === "Yes" && <span className="badge health">Health</span>}
     </div>
   );
 
@@ -121,29 +124,39 @@ function Courses() {
                           <span className="info-label">Department:</span>
                           <span className="info-value">{highlightText(course.department, searchQuery)}</span>
                         </div>
-                        <div className="info-item">
-                          <span className="info-label">Duration:</span>
-                          <span className="info-value">{highlightText(formatValue(course.duration), searchQuery)}</span>
-                        </div>
+                        {course.duration && (
+                          <div className="info-item">
+                            <span className="info-label">Duration:</span>
+                            <span className="info-value">{highlightText(course.duration, searchQuery)}</span>
+                          </div>
+                        )}
                         <div className="info-item">
                           <span className="info-label">Prerequisites:</span>
-                          <span className="info-value">{highlightText(formatValue(course.prerequisite), searchQuery)}</span>
+                          <span className="info-value">{highlightText(course.prerequisites, searchQuery)}</span>
                         </div>
+                        {course.video && (
+                          <div className="info-item">
+                            <button onClick={() => window.open(course.video, '_blank', 'noopener,noreferrer')} className="video-button">Watch Video</button>
+                          </div>
+                        )}
                       </div>
-
                       <div className="course-description-text">
                         <h3>Course Description</h3>
                         <p>{highlightText(course.description, searchQuery)}</p>
+                        {course.notes && <p>{highlightText(course.notes, searchQuery)}</p>}
                       </div>
-
-                      <div className="course-requirements">
-                        <h3>Course Designations</h3>
-                        <ul>
-                          <li>{course.type}</li>
-                          {course.ncaa && <li>NCAA Approved Course</li>}
-                          {course.mmcvpaa && <li>Qualifies for .50 MMC-VPAA Requirements</li>}
-                        </ul>
-                      </div>
+                      {(course.type !== "Regular" || course.ncaa === "Yes" || course.vpaa === "Yes" || course.pe === "Yes" || course.health === "Yes") && (
+                        <div className="course-requirements">
+                          <h3>Course Designations</h3>
+                          <ul>
+                            {course.type !== "Regular" && <li>{course.type}</li>}
+                            {course.ncaa === "Yes" && <li>NCAA Approved Course</li>}
+                            {course.vpaa === "Yes" && <li>Qualifies for .50 MMC-VPAA Requirements</li>}
+                            {course.pe === "Yes" && <li>Qualifies for .50 MMC-Physical Education Requirement</li>}
+                            {course.health === "Yes" && <li>Meets .50 MMC/Health Requirement</li>}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

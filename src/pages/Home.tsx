@@ -6,7 +6,7 @@ function Home() {
     <div className="home-container">
       <div className="homeHeader">
         <h1>INTRODUCING <span className="gradientText">MUSTANG SCHOLAR</span></h1>
-        <h2>Personalized course and club recommendations to help you thrive</h2>
+        <h2>NHS course & club recommender made for students, by students.</h2>
       </div>
 
       <section className="description-section">
@@ -14,7 +14,7 @@ function Home() {
           <p>
             High school can be overwhelming, especially when navigating long, complicated course catalogs 
             and trying to make sense of all the available options. That's where we come in. Our website 
-            streamlines the process by organizing course information into a simple, user-friendly format.
+            streamlines the process by organizing course & club information into a simple, user-friendly format.
           </p>
             <Link to="/courses" className="action-button">
               Get Started
