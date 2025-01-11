@@ -92,7 +92,7 @@
 
 .course-title h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 24px;
     color: var(--light-orange);
 }
 
@@ -179,6 +179,9 @@
 .course-description {
     padding: 20px;
     border-top: 1px solid var(--light-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: space-between;
 }
 
 .course-info-grid {
@@ -194,6 +197,10 @@
     gap: 4px;
 }
 
+.info-item.club {
+    margin-top: 20px;
+}
+
 .info-label {
     font-weight: 600;
     color: var(--light-gray);
@@ -204,8 +211,14 @@
     color: var(--white);
 }
 
+.info-item a {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .course-description-text {
-    margin: 24px 0;
+    margin: 0;
+    margin-right: 20px;
 }
 
 .course-description-text h3 {
@@ -254,5 +267,12 @@
     border-radius: 3px;
     margin: 0;
     padding: 0;
-    font-weight: var(--bold)
+    font-size: inherit;
+    font-weight: var(--bold);
+}
+
+.club-flyer iframe {
+    border: none;
+    width: 500px;
+    height: 650px;
 }

@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { fetchClubs, Club } from '../api';
-import '../styles/Club.css';
+import { useState } from 'react';
+import '../styles/Lists.css';
 import { useData } from '../context/DataContext';
 
 function Clubs() {
@@ -42,43 +41,58 @@ function Clubs() {
         <div className="loading-spinner"></div>
       ) : (
         <>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search clubs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="clubs-list">
+          <div className="filters-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search clubs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="results-count">
+            Found {filteredClubs.length} course{filteredClubs.length !== 1 ? 's' : ''}
+          </div>
+
+          <div className="courses-list">
             {filteredClubs.map((club, index) => (
               <div 
                 key={index} 
-                className={`club-item ${activeIndex === index ? 'active' : ''}`} 
+                className={`course-item ${activeIndex === index ? 'active' : ''}`} 
               >
-                <div className="club-header">
-                  <h2>{highlightText(club.name, searchQuery)}</h2>
-                  <span
-                    className="dropdown-arrow"
-                    onClick={() => handleToggle(index)}
-                  >{activeIndex === index ? '▲' : '▼'}</span>
+                <div className="course-header" onClick={() => handleToggle(index)}>
+                  <div className="course-title">
+                    <h2>{highlightText(club.name, searchQuery)}</h2>
+                  </div>
+                  <span className="dropdown-arrow">
+                    {activeIndex === index ? '▲' : '▼'}
+                  </span>
                 </div>
                 {activeIndex === index && (
-                  <div className="club-description">
-                    <div className="club-details">
-                      <p>{highlightText(club.description, searchQuery)}</p>
-                      <p>Officer: <span>{highlightText(club.officer, searchQuery)}</span></p>
-                      <p>Officer Email: <a href={`mailto:${club.email}`}>{highlightText(club.email, searchQuery)}</a></p>
-                      <p>Advisor: <span>{highlightText(club.advisor, searchQuery)}</span></p>
-                      {club.flyer && (
-                          <a href={club.flyer} target="_blank" rel="noopener noreferrer">View Flyer</a>
-                      )}
+                  <div className="course-description">
+                    <div className="course-details">
+                      <div className="course-description-text">
+                        <h3>Club Description</h3>
+                        <p>{highlightText(club.description, searchQuery)}</p>
+                      </div>
+                      <div className="info-item club">
+                        <span className="info-label">Officer:</span>
+                        <span className="info-value">{highlightText(club.officer, searchQuery)}</span>
+                      </div>
+                      <div className="info-item club">
+                        <span className="info-label">Officer Email:</span>
+                        <a className="info-value" href={`mailto:${club.email}`}>{highlightText(club.email, searchQuery)}</a>
+                      </div>
+                      <div className="info-item club">
+                        <span className="info-label">Advisor:</span>
+                        <span className="info-value">{highlightText(club.advisor, searchQuery)}</span>
+                      </div>
                     </div>
                     {club.flyer && (
                       <div className="club-flyer">
                         <iframe 
                           src={getDriveViewerUrl(club.flyer)} 
-                          width="100%" 
-                          height="650px" 
                           title="Flyer"
                         ></iframe>
                       </div>

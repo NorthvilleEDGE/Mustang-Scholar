@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { fetchCourses } from '../api';
-import '../styles/Courses.css';
+import { useState } from 'react';
+import '../styles/Lists.css';
 import { useData } from '../context/DataContext';
 
 interface Course {
