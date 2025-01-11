@@ -47,6 +47,7 @@
 
 .expand-toggle:hover {
   background: linear-gradient(90deg, var(--light-orange), var(--orange));
+  transform: none;
 }
 
 .chat-panel-content {

@@ -264,3 +264,22 @@
     width: 500px;
     height: 650px;
 }
+
+.video-button {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--orange), var(--light-orange));
+    color: white;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: var(--bold);
+    margin: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.video-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+}
