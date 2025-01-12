@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanel.css';
-import { fetchClubs, Club } from '../api';
 import { useData } from '../context/DataContext';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
