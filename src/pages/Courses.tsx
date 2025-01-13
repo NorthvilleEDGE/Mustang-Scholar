@@ -24,7 +24,7 @@ function Courses() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-  const [sortOption, setSortOption] = useState<string>('');
+  const [sortOption, setSortOption] = useState<string>('number');
   const [filterNCAA, setFilterNCAA] = useState(false);
   const [filterVPAA, setFilterVPAA] = useState(false);
   const [filterPrerequisites, setFilterPrerequisites] = useState(false);
@@ -86,8 +86,8 @@ function Courses() {
         return [...courses].sort((a, b) => a.name.localeCompare(b.name));
       case 'number':
         return [...courses].sort((a, b) => a.number.localeCompare(b.number));
-      case 'department':
-        return [...courses].sort((a, b) => a.department.localeCompare(b.department));
+      case 'type':
+        return [...courses].sort((a, b) => a.type.localeCompare(b.type));
       default:
         return courses;
     }
@@ -223,10 +223,9 @@ function Courses() {
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
           >
-            <option value="">None</option>
             <option value="name">Name</option>
-            <option value="number">Number</option>
-            <option value="department">Department</option>
+            <option value="number">Department</option>
+            <option value="type">Type</option>
           </select>
         </div>
       </div>

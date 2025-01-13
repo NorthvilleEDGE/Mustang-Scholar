@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Home from './pages/Home'
 import Courses from './pages/Courses'
 import Clubs from './pages/Clubs'
-import Recommendations from './pages/Recommendations'
+import Recommender from './pages/Recommender'
 import AboutUs from './pages/AboutUs'
 import ChatButton from './components/ChatButton'
 import ChatPanel from './components/ChatPanel'
@@ -26,7 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/clubs" element={<Clubs />} />
-          <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/recommender" element={<Recommender />} />
           <Route path="/about" element={<AboutUs />} />
         </Routes>
         <ChatButton isOpen={isChatOpen} onClick={toggleChat} />

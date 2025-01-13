@@ -20,7 +20,7 @@ interface Message {
 }
 
 function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
-  const { clubs } = useData();
+  const { clubs, courses } = useData();
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
   ]);
@@ -43,21 +43,44 @@ function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
       
       const conversationHistory = messages.map(message => `${message.sender}: ${message.text}`).join('\n');
       const clubsInfo = clubs.map(club => `${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}`).join('\n');
-      const prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
+      const important = `
+IMPORTANT:
+If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response. For example, if the user asks about clubs, type "<CLUBS>" as your response.
+Clubs:
+<CLUBS>
+Departments:
+${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].join('\n')}
+`
+
+      let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
       You should provide personalized recommendations and advice about courses and extracurricular activities.
-      Keep responses concise and friendly. Ensure all URLs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
-      
+      Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
+
       Here is the conversation history:
       ${conversationHistory}
-      
-      Here are the available clubs:
-      ${clubsInfo}
-      
       Current user message: ${userInput}`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text();
+      let result = await model.generateContent(prompt + important);
+      let response = await result.response;
+      let responseText = response.text();
+      console.log(responseText);
+
+      if (responseText.includes('<CLUBS>')) {
+        prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+      }
+      const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
+      for (const tag of departmentTags) {
+        if (responseText.includes(tag)) {
+          const departmentCourses = courses.filter(course => `<${course.department.toUpperCase()}>` === tag)
+            .map(course => `${course.name} - ${course.description} - Department: ${course.department} - Course Number: ${course.number}`).join('\n');
+          prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+        }
+      }
+      result = await model.generateContent(prompt);
+      response = await result.response;
+      responseText = response.text();
+
+      return responseText;
     } catch (error) {
       console.error('Error generating response:', error);
       return 'I apologize, but I encountered an error. Please try again.';
