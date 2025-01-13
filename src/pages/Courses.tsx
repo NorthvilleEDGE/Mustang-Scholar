@@ -208,6 +208,7 @@ function Courses() {
           <label htmlFor="duration">Duration</label>
           <select
             id="duration"
+            className="department-select"
             value={filterDuration}
             onChange={(e) => setFilterDuration(e.target.value)}
           >

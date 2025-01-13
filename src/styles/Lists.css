@@ -344,10 +344,12 @@
     margin-bottom: 8px;
     cursor: pointer;
     transition: 0.3s;
+    border-radius: 10px;
 }
 
 .sidebar .filter-group .checkbox-label:hover {
-    scale: 1.1;
+    scale: 1.05;
+    background: var(--dark-gray);
 }
 
 .sidebar .filter-group .checkbox-label input[type="checkbox"] {

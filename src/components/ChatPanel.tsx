@@ -58,12 +58,12 @@ ${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].jo
 
       Here is the conversation history:
       ${conversationHistory}
-      Current user message: ${userInput}`;
 
+      Current user message: ${userInput}`;
+      
       let result = await model.generateContent(prompt + important);
       let response = await result.response;
       let responseText = response.text();
-      console.log(responseText);
 
       if (responseText.includes('<CLUBS>')) {
         prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
