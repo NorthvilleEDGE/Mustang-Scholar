@@ -37,25 +37,7 @@ function Home() {
             </Link>
           </div>
           <div className="image-carousel courses">
-            <svg className="feature-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="courseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--orange)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--light-orange)' }} />
-                </linearGradient>
-              </defs>
-              {/* Graduation Cap */}
-              <path 
-                fill="url(#courseGradient)"
-                d="M100 20L20 70l80 50 80-50L100 20zM40 85v40l60 35 60-35V85l-60 35-60-35z"
-              />
-              {/* Book */}
-              <path 
-                fill="url(#courseGradient)"
-                d="M60 140h80c5.5 0 10-4.5 10-10V70c0-5.5-4.5-10-10-10H60c-5.5 0-10 4.5-10 10v60c0 5.5 4.5 10 10 10z"
-                opacity="0.7"
-              />
-            </svg>
+            <img src="Graduation Cap.svg" alt="Courses" className="feature-svg"/>
           </div>
         </div>
 
@@ -71,27 +53,7 @@ function Home() {
             </Link>
           </div>
           <div className="image-carousel clubs">
-            <svg className="feature-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="clubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'var(--orange)' }} />
-                  <stop offset="100%" style={{ stopColor: 'var(--light-orange)' }} />
-                </linearGradient>
-              </defs>
-              {/* Group of People */}
-              <circle cx="100" cy="70" r="20" fill="url(#clubGradient)" />
-              <circle cx="60" cy="100" r="20" fill="url(#clubGradient)" opacity="0.8" />
-              <circle cx="140" cy="100" r="20" fill="url(#clubGradient)" opacity="0.8" />
-              {/* Connection Lines */}
-              <path 
-                d="M80 70L120 70M60 100L140 100" 
-                stroke="url(#clubGradient)" 
-                strokeWidth="4"
-                opacity="0.6"
-              />
-              {/* Activity Icons */}
-              <rect x="70" y="130" width="60" height="30" rx="15" fill="url(#clubGradient)" opacity="0.7" />
-            </svg>
+            <img src="People Connecting.svg" alt="Clubs" className="feature-svg"/>
           </div>
         </div>
       </section>

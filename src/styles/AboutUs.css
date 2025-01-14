@@ -77,7 +77,6 @@
 .edge-logo {
   width: 100%;
   height: auto;
-  -webkit-background-clip: inherit;
 }
 
 @media (max-width: 768px) {
