@@ -5,6 +5,7 @@
     background-color: var(--black);
     padding: 10px 40px;
     border-bottom: 1px solid var(--light-gray);
+    height: var(--header-height);
 }
 
 .header .title {

@@ -13,6 +13,8 @@
     --bold: 500;
     --regular: 400;
     --light: 300;
+
+    --header-height: 60px;
 }
 
 * {

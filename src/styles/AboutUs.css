@@ -2,6 +2,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  align-content: center;
+  height: calc(100vh - var(--header-height));
 }
 
 .about-header {
@@ -14,8 +16,6 @@
   margin-bottom: 20px;
 }
 
-.mission-section,
-.vision-section,
 .team-section {
   margin: 60px 0;
 }
@@ -68,20 +68,15 @@
 }
 
 .logo-box {
-  flex: 1;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  flex: 1;  
 }
 
 .edge-logo {
   width: 100%;
   height: auto;
-  max-width: 250px;
 }
 
 @media (max-width: 768px) {
