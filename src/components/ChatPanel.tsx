@@ -19,7 +19,7 @@ interface Message {
   id: number;
 }
 
-function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
+function ChatPanel({ isOpen }: ChatPanelProps) {
   const { clubs, courses } = useData();
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
