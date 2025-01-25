@@ -14,7 +14,7 @@ function AboutUs() {
             <a href="https://northvilleedge.wixsite.com/northvilleedge" className="button-container" target="_blank" rel="noopener noreferrer">Visit our website!</a>
           </div>
           <div className="logo-box">
-            <img src="/EDGE-Logo.svg" alt="EDGE Logo" className="edge-logo" />
+            <img src="EDGE-Logo.svg" alt="EDGE Logo" className="edge-logo" />
           </div>
         </div>
       </section>
