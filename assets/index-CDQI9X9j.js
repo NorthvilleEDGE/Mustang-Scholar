@@ -288,8 +288,8 @@ Error generating stack: `+l.message+`
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */class Hk{constructor(t){this.apiKey=t}getGenerativeModel(t,n){if(!t.model)throw new De("Must provide a model name. Example: genai.getGenerativeModel({ model: 'my-model-name' })");return new Of(this.apiKey,t,n)}getGenerativeModelFromCachedContent(t,n,r){if(!t.name)throw new nn("Cached content must contain a `name` field.");if(!t.model)throw new nn("Cached content must contain a `model` field.");const i=["model","systemInstruction"];for(const o of i)if(n!=null&&n[o]&&t[o]&&(n==null?void 0:n[o])!==t[o]){if(o==="model"){const s=n.model.startsWith("models/")?n.model.replace("models/",""):n.model,u=t.model.startsWith("models/")?t.model.replace("models/",""):t.model;if(s===u)continue}throw new nn(`Different value for "${o}" specified in modelParams (${n[o]}) and cachedContent (${t[o]})`)}const l=Object.assign(Object.assign({},n),{model:t.model,tools:t.tools,toolConfig:t.toolConfig,systemInstruction:t.systemInstruction,cachedContent:t});return new Of(this.apiKey,l,r)}}function Vk(){return w.jsx("div",{className:"message bot typing-indicator",children:w.jsx("div",{className:"message-content",children:w.jsxs("div",{className:"dots",children:[w.jsx("span",{}),w.jsx("span",{}),w.jsx("span",{})]})})})}const Wk="AIzaSyCm9BBJqxn-XavnhG69Coaq7bjQidioZfg",Gk=new Hk(Wk);function Yk({isOpen:e}){const{clubs:t,courses:n}=Bu(),[r,i]=R.useState([{text:"Hi! I'm your Mustang Scholar AI Assistant. How can I help you today?",sender:"bot",id:1}]),[l,o]=R.useState(""),[s,u]=R.useState(!1),[a,c]=R.useState(!1),f=R.useRef(null),p=()=>{var C;(C=f.current)==null||C.scrollIntoView({behavior:"smooth"})};R.useEffect(()=>{p()},[r,s]);const d=async C=>{try{const h=Gk.getGenerativeModel({model:"gemini-1.5-flash"}),m=r.map(A=>`${A.sender}: ${A.text}`).join(`
-`),y=t.map(A=>`${A.name} - ${A.description} - Officer: ${A.officer} - Officer Email: ${A.email} - Advisor: ${A.advisor} - Flyer URL: ${A.flyer}`).join(`
+ */class Hk{constructor(t){this.apiKey=t}getGenerativeModel(t,n){if(!t.model)throw new De("Must provide a model name. Example: genai.getGenerativeModel({ model: 'my-model-name' })");return new Of(this.apiKey,t,n)}getGenerativeModelFromCachedContent(t,n,r){if(!t.name)throw new nn("Cached content must contain a `name` field.");if(!t.model)throw new nn("Cached content must contain a `model` field.");const i=["model","systemInstruction"];for(const o of i)if(n!=null&&n[o]&&t[o]&&(n==null?void 0:n[o])!==t[o]){if(o==="model"){const s=n.model.startsWith("models/")?n.model.replace("models/",""):n.model,u=t.model.startsWith("models/")?t.model.replace("models/",""):t.model;if(s===u)continue}throw new nn(`Different value for "${o}" specified in modelParams (${n[o]}) and cachedContent (${t[o]})`)}const l=Object.assign(Object.assign({},n),{model:t.model,tools:t.tools,toolConfig:t.toolConfig,systemInstruction:t.systemInstruction,cachedContent:t});return new Of(this.apiKey,l,r)}}function Vk(){return w.jsx("div",{className:"message bot typing-indicator",children:w.jsx("div",{className:"message-content",children:w.jsxs("div",{className:"dots",children:[w.jsx("span",{}),w.jsx("span",{}),w.jsx("span",{})]})})})}const Wk="AIzaSyCm9BBJqxn-XavnhG69Coaq7bjQidioZfg",Gk=new Hk(Wk);function Yk({isOpen:e}){const{clubs:t,courses:n}=Bu(),[r,i]=R.useState([{text:"Hi! I'm your Mustang Scholar AI Assistant. How can I help you today?",sender:"bot",id:1}]),[l,o]=R.useState(""),[s,u]=R.useState(!1),[a,c]=R.useState(!1),f=R.useRef(null),p=()=>{var C;(C=f.current)==null||C.scrollIntoView({behavior:"smooth"})};R.useEffect(()=>{p()},[r,s]);const d=async C=>{try{const h=Gk.getGenerativeModel({model:"gemini-1.5-flash"}),m=r.map(A=>`{${A.sender}: ${A.text}}`).join(`
+`),y=t.map(A=>`{${A.name} - ${A.description} - Officer: ${A.officer} - Officer Email: ${A.email} - Advisor: ${A.advisor} - Flyer URL: ${A.flyer}}`).join(`
 `),E=`
 IMPORTANT:
 If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response. For example, if the user asks about clubs, type "<CLUBS>" as your response.
@@ -299,18 +299,17 @@ Departments:
 ${[...new Set(n.map(A=>`<${A.department.toUpperCase()}>`))].join(`
 `)}
 `;let I=`You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
-      You should provide personalized recommendations and advice about courses and extracurricular activities.
-      Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
+You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
+Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
 
-      Here is the conversation history:
-      ${m}
-
-      Current user message: ${C}`,S=await h.generateContent(I+E),T=await S.response,L=T.text();L.includes("<CLUBS>")&&(I+=`
+This is the current conversation:
+${m}
+{user: ${C}}`;console.log(I);let S=await h.generateContent(I+E),T=await S.response,L=T.text();L.includes("<CLUBS>")&&(I+=`
 
 Clubs Information:
 ${y}
 
-`);const B=[...new Set(n.map(A=>`<${A.department.toUpperCase()}>`))];for(const A of B)if(L.includes(A)){const F=n.filter(D=>`<${D.department.toUpperCase()}>`===A).map(D=>`${D.name} - ${D.description} - Department: ${D.department} - Course Number: ${D.number}`).join(`
+`);const B=[...new Set(n.map(A=>`<${A.department.toUpperCase()}>`))];for(const A of B)if(L.includes(A)){const F=n.filter(D=>`<${D.department.toUpperCase()}>`===A).map(D=>`{${D.name} - Description: ${D.description} - Department: ${D.department} - Course Number: ${D.number} - Prerequisites: ${D.prerequisites} - Duration: ${D.duration} - Video Link: ${D.video}}`).join(`
 `);I+=`
 
 Courses Information for ${A}:
