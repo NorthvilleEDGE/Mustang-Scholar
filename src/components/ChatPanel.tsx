@@ -41,8 +41,8 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
       
-      const conversationHistory = messages.map(message => `${message.sender}: ${message.text}`).join('\n');
-      const clubsInfo = clubs.map(club => `${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}`).join('\n');
+      const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
+      const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
       const important = `
 IMPORTANT:
 If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response. For example, if the user asks about clubs, type "<CLUBS>" as your response.
@@ -53,13 +53,14 @@ ${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].jo
 `
 
       let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
-      You should provide personalized recommendations and advice about courses and extracurricular activities.
-      Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
+You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
+Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
 
-      Here is the conversation history:
-      ${conversationHistory}
+This is the current conversation:
+${conversationHistory}
+{user: ${userInput}}`;
 
-      Current user message: ${userInput}`;
+      console.log(prompt);
       
       let result = await model.generateContent(prompt + important);
       let response = await result.response;
@@ -72,7 +73,7 @@ ${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].jo
       for (const tag of departmentTags) {
         if (responseText.includes(tag)) {
           const departmentCourses = courses.filter(course => `<${course.department.toUpperCase()}>` === tag)
-            .map(course => `${course.name} - ${course.description} - Department: ${course.department} - Course Number: ${course.number}`).join('\n');
+            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`).join('\n');
           prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
         }
       }
