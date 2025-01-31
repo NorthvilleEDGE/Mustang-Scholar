@@ -34,8 +34,8 @@
 
 .search-input:focus,
 .department-select:focus {
-    border-color: var(--orange);
-    box-shadow: 0 0 10px var(--orange);
+    border-color: var(--light-orange);
+    box-shadow: 0 0 10px var(--light-orange);
     outline: none;
 }
 
@@ -75,8 +75,8 @@
 }
 
 .course-item:hover {
-    box-shadow: 0 0 30px var(--orange);
-    border-color: var(--orange);
+    box-shadow: 0 0 30px var(--light-orange);
+    border-color: var(--light-orange);
 }
 
 .course-header {
@@ -167,7 +167,7 @@
 }
 
 .dropdown-arrow:hover {
-    color: var(--orange);
+    color: var(--light-orange);
     scale: 1.1;
 }
 
@@ -327,7 +327,7 @@
 
 .sidebar .filter-group select:focus,
 .sidebar .filter-group input:focus {
-    border-color: var(--orange);
+    border-color: var(--light-orange);
     outline: none;
 }
 
@@ -385,8 +385,8 @@
 }
 
 .sidebar .sort-group select:focus {
-    border-color: var(--orange);
-    box-shadow: 0 0 10px var(--orange);
+    border-color: var(--light-orange);
+    box-shadow: 0 0 10px var(--light-orange);
     outline: none;
 }
 
