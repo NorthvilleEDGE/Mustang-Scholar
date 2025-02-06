@@ -14,7 +14,7 @@
 .search-input {
     flex: 1;
     padding: 12px 20px;
-    border: 2px solid var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 10px;
     font-size: 16px;
     background: var(--dark-gray);
@@ -24,7 +24,7 @@
 
 .department-select {
     padding: 12px 20px;
-    border: 2px solid var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 10px;
     font-size: 16px;
     min-width: 200px;
@@ -66,7 +66,7 @@
 
 .course-item {
     background: var(--dark-gray);
-    border: 2px solid var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 15px;
     margin-bottom: 16px;
     overflow: hidden;
@@ -293,9 +293,9 @@
     width: 300px;
     padding: 20px;
     background: #151515;
-    border-radius: 10px;
     margin-right: 20px;
     flex-shrink: 0;
+    min-height: calc(100vh - var(--header-height));
 }
 
 .sidebar h3 {
@@ -317,7 +317,7 @@
 .sidebar .filter-group input {
     width: 100%;
     padding: 12px;
-    border: 2px solid var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 10px;
     font-size: 16px;
     background: var(--dark-gray);
@@ -377,7 +377,7 @@
 .sidebar .sort-group select {
     width: 100%;
     padding: 12px;
-    border: 2px solid var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 10px;
     font-size: 16px;
     background: var(--dark-gray);
