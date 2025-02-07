@@ -51,8 +51,15 @@ function Clubs() {
             />
           </div>
 
-          <div className="results-count">
-            Found {filteredClubs.length} course{filteredClubs.length !== 1 ? 's' : ''}
+          <div className="results-container">
+            <div className="results-count">
+              Found {filteredClubs.length} club{filteredClubs.length !== 1 ? 's' : ''}
+            </div>
+            <div className="spreadsheet-link">
+              <a href="https://docs.google.com/spreadsheets/d/1LG5rusglPGf94oQumuBcZV6NpEbj-Hvy7tbkvT5kLlc/edit?gid=169106169#gid=169106169" target="_blank" rel="noopener noreferrer">
+                View Clubs Spreadsheet
+              </a>
+            </div>
           </div>
 
           <div className="courses-list">

@@ -43,6 +43,26 @@
     margin-bottom: 16px;
     color: var(--light-gray);
     font-size: 14px;
+    display: inline-block;
+}
+
+.spreadsheet-link {
+    text-align: right;
+    margin-bottom: 16px;
+    display: inline-block;
+    margin-left: auto;
+}
+
+
+.spreadsheet-link a {
+    color: var(--light-gray);
+    text-decoration: underline;
+    transition: color 0.3s ease;
+    font-size: 14px;
+}
+
+.spreadsheet-link a:hover {
+    color: var(--light-orange);
 }
 
 .loading-spinner {
@@ -392,4 +412,11 @@
 
 .main-content {
     display: flex;
+}
+
+.results-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
