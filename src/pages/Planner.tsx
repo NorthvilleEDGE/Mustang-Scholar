@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
-import Cookies from 'js-cookie';
+import '../styles/Lists.css';
 import '../styles/Planner.css';
 
 interface CourseOption {
@@ -9,42 +9,13 @@ interface CourseOption {
 }
 
 function Planner() {
-  const { courses } = useData();
+  const { courses, loading } = useData();
   const [gradeLevel, setGradeLevel] = useState<string>('');
   const [semester1Selections, setSemester1Selections] = useState<string[]>(Array(9).fill(''));
   const [semester2Selections, setSemester2Selections] = useState<string[]>(Array(9).fill(''));
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
-
-  // Load saved selections from cookies when component mounts
-  useEffect(() => {
-    const savedGradeLevel = Cookies.get('gradeLevel');
-    const savedSemester1 = Cookies.get('semester1Selections');
-    const savedSemester2 = Cookies.get('semester2Selections');
-
-    if (savedGradeLevel) {
-      setGradeLevel(savedGradeLevel);
-    }
-    if (savedSemester1) {
-      setSemester1Selections(JSON.parse(savedSemester1));
-    }
-    if (savedSemester2) {
-      setSemester2Selections(JSON.parse(savedSemester2));
-    }
-  }, []);
-
-  // Save selections to cookies whenever they change
-  useEffect(() => {
-    // Set cookies to expire in 30 days
-    const options = { expires: 30 };
-    
-    if (gradeLevel) {
-      Cookies.set('gradeLevel', gradeLevel, options);
-    }
-    Cookies.set('semester1Selections', JSON.stringify(semester1Selections), options);
-    Cookies.set('semester2Selections', JSON.stringify(semester2Selections), options);
-  }, [gradeLevel, semester1Selections, semester2Selections]);
 
   const getCourseOptions = (grade: string): CourseOption[] => {
     const options: CourseOption[] = [];
@@ -68,7 +39,7 @@ function Planner() {
         { label: 'Science', courses: filterCourses(courses.filter(c => c.department === 'Science')) },
         { label: 'Social Studies', courses: filterCourses(courses.filter(c => c.department === 'Social Studies')) },
         { label: 'World Language', courses: filterCourses(courses.filter(c => c.department === 'World Language')) },
-        { label: 'Health/PE', courses: filterCourses(courses.filter(c => c.department === 'Health/PE')) },
+        { label: 'Elective', courses: filterCourses(courses) },
         { label: 'Elective', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
@@ -162,7 +133,11 @@ function Planner() {
     // If not placed, try to place in an elective slot
     if (!placed) {
       courseOptions.forEach((option, index) => {
-        if (!placed && option.label === 'Elective') {
+        if (!placed && (
+          option.label === 'Elective' || 
+          option.label === '(Alternate Elective)' || 
+          option.label.startsWith('Course ')
+        )) {
           if (tryPlaceCourse(index, selectedCourse)) {
             placed = true;
           }
@@ -185,7 +160,6 @@ function Planner() {
     setShowSearchResults(false);
   };
 
-  // Helper function to try placing a course in a specific slot
   const tryPlaceCourse = (index: number, selectedCourse: any) => {
     const isPairedCourse = /[AB]$/.test(selectedCourse.name);
     let pairedCourseName: string | null = null;
@@ -268,11 +242,6 @@ function Planner() {
     setSemester1Selections(Array(9).fill(''));
     setSemester2Selections(Array(9).fill(''));
     setGradeLevel('');
-    
-    // Remove cookies
-    Cookies.remove('gradeLevel');
-    Cookies.remove('semester1Selections');
-    Cookies.remove('semester2Selections');
   };
 
   const handlePrint = () => {
@@ -329,7 +298,7 @@ function Planner() {
               </tr>
             </thead>
             <tbody>
-              ${courseOptions.map((option, index) => `
+              ${getCourseOptions(gradeLevel).map((option, index) => `
                 <tr>
                   <td>${option.label}</td>
                   <td>${semester1Selections[index] || '-'}</td>
@@ -348,8 +317,6 @@ function Planner() {
     printWindow.print();
   };
 
-  const courseOptions = getCourseOptions(gradeLevel);
-
   useEffect(() => {
     setSemester1Selections(Array(9).fill(''));
     setSemester2Selections(Array(9).fill(''));
@@ -357,93 +324,99 @@ function Planner() {
 
   return (
     <div className="main-content">
-      <div className="sidebar">
-        <div className="filter-group">
-          <label htmlFor="search">Search Courses</label>
-          <input
-            type="text"
-            id="search"
-            className="search-input"
-            placeholder="Search for a course..."
-            value={searchQuery}
-            onChange={(e) => handleSearchInput(e.target.value)}
-          />
-          {showSearchResults && searchResults.length > 0 && (
-            <div className="search-results">
-              {searchResults.map((course, index) => (
-                <div
-                  key={index}
-                  className="search-result-item"
-                  onClick={() => handleCourseSelect(course)}
-                >
-                  {course.name}
+      {loading ? (
+        <div className="loading-spinner"></div>
+      ) : (
+        <>
+          <div className="sidebar">
+            <div className="filter-group">
+              <label htmlFor="search">Search Courses</label>
+              <input
+                type="text"
+                id="search"
+                className="search-input"
+                placeholder="Search for a course..."
+                value={searchQuery}
+                onChange={(e) => handleSearchInput(e.target.value)}
+              />
+              {showSearchResults && searchResults.length > 0 && (
+                <div className="search-results">
+                  {searchResults.map((course, index) => (
+                    <div
+                      key={index}
+                      className="search-result-item"
+                      onClick={() => handleCourseSelect(course)}
+                    >
+                      {course.name}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      <div className="planner-container">
-        <div className="planner-form">
-          <select 
-            className="grade-select"
-            value={gradeLevel}
-            onChange={(e) => setGradeLevel(e.target.value)}
-          >
-            <option value="">Select a grade for a grade-specific class template</option>
-            <option value="9">9th Grade</option>
-            <option value="10">10th Grade</option>
-            <option value="11">11th Grade</option>
-            <option value="12">12th Grade</option>
-          </select>
+          <div className="planner-container">
+            <div className="planner-form">
+              <select 
+                className="grade-select"
+                value={gradeLevel}
+                onChange={(e) => setGradeLevel(e.target.value)}
+              >
+                <option value="">Select a grade for a grade-specific class template</option>
+                <option value="9">9th Grade</option>
+                <option value="10">10th Grade</option>
+                <option value="11">11th Grade</option>
+                <option value="12">12th Grade</option>
+              </select>
 
-          <div className="course-table">
-            <div className="semester-headers">
-              <div className="label-column"></div>
-              <h2>Semester 1</h2>
-              <h2>Semester 2</h2>
-            </div>
-            {courseOptions.map((option, index) => (
-              <div key={`row-${index}`} className="course-row">
-                <div className="label-column">
-                  <label>{option.label}</label>
+              <div className="course-table">
+                <div className="semester-headers">
+                  <div className="label-column"></div>
+                  <h2>Semester 1</h2>
+                  <h2>Semester 2</h2>
                 </div>
-                <div className="semester-column">
-                  <select
-                    value={semester1Selections[index]}
-                    onChange={(e) => handleSemester1Change(index, e.target.value)}
-                  >
-                    <option value="">Select a course</option>
-                    {option.courses.map((course, i) => (
-                      <option key={i} value={course}>{course}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="semester-column">
-                  <select
-                    value={semester2Selections[index]}
-                    onChange={(e) => handleSemester2Change(index, e.target.value)}
-                  >
-                    <option value="">Select a course</option>
-                    {option.courses.map((course, i) => (
-                      <option key={i} value={course}>{course}</option>
-                    ))}
-                  </select>
-                </div>
+                {getCourseOptions(gradeLevel).map((option, index) => (
+                  <div key={`row-${index}`} className="course-row">
+                    <div className="label-column">
+                      <label>{option.label}</label>
+                    </div>
+                    <div className="semester-column">
+                      <select
+                        value={semester1Selections[index]}
+                        onChange={(e) => handleSemester1Change(index, e.target.value)}
+                      >
+                        <option value="">Select a course</option>
+                        {option.courses.map((course, i) => (
+                          <option key={i} value={course}>{course}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="semester-column">
+                      <select
+                        value={semester2Selections[index]}
+                        onChange={(e) => handleSemester2Change(index, e.target.value)}
+                      >
+                        <option value="">Select a course</option>
+                        {option.courses.map((course, i) => (
+                          <option key={i} value={course}>{course}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+              <div className="button-container">
+                <button className="clear-button" onClick={handleClear}>
+                  Clear All
+                </button>
+                <button className="print-button" onClick={handlePrint}>
+                  Print Schedule
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="button-container">
-            <button className="clear-button" onClick={handleClear}>
-              Clear All
-            </button>
-            <button className="print-button" onClick={handlePrint}>
-              Print Schedule
-            </button>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
