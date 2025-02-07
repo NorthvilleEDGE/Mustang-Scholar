@@ -32,6 +32,26 @@
     color: var(--white);
 }
 
+.catalog-button {
+    padding: 12px 20px;
+    border: 1px solid var(--light-orange);
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: var(--dark-gray);
+    color: var(--light-orange);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.catalog-button:hover {
+    background-color: var(--light-orange);
+    color: var(--dark-gray);
+    box-shadow: 0 0 10px var(--light-orange);
+    transform: translateY(-2px);
+}
+
 .search-input:focus,
 .department-select:focus {
     border-color: var(--light-orange);
