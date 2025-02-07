@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '../context/DataContext';
+import Cookies from 'js-cookie';
 import '../styles/Planner.css';
 
 interface CourseOption {
@@ -10,28 +11,44 @@ interface CourseOption {
 function Planner() {
   const { courses } = useData();
   const [gradeLevel, setGradeLevel] = useState<string>('');
-  const [semester1Selections, setSemester1Selections] = useState<string[]>([]);
-  const [semester2Selections, setSemester2Selections] = useState<string[]>([]);
-  
-  // Filter states
-  const [filterNCAA, setFilterNCAA] = useState(false);
-  const [filterVPAA, setFilterVPAA] = useState(false);
-  const [filterPrerequisites, setFilterPrerequisites] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-  const [filterRegular, setFilterRegular] = useState(false);
-  const [filterHonors, setFilterHonors] = useState(false);
-  const [filterAP, setFilterAP] = useState(false);
-  const [filterIB, setFilterIB] = useState(false);
-  
-  // Search states
+  const [semester1Selections, setSemester1Selections] = useState<string[]>(Array(9).fill(''));
+  const [semester2Selections, setSemester2Selections] = useState<string[]>(Array(9).fill(''));
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Get course options based on grade level and filters
+  // Load saved selections from cookies when component mounts
+  useEffect(() => {
+    const savedGradeLevel = Cookies.get('gradeLevel');
+    const savedSemester1 = Cookies.get('semester1Selections');
+    const savedSemester2 = Cookies.get('semester2Selections');
+
+    if (savedGradeLevel) {
+      setGradeLevel(savedGradeLevel);
+    }
+    if (savedSemester1) {
+      setSemester1Selections(JSON.parse(savedSemester1));
+    }
+    if (savedSemester2) {
+      setSemester2Selections(JSON.parse(savedSemester2));
+    }
+  }, []);
+
+  // Save selections to cookies whenever they change
+  useEffect(() => {
+    // Set cookies to expire in 30 days
+    const options = { expires: 30 };
+    
+    if (gradeLevel) {
+      Cookies.set('gradeLevel', gradeLevel, options);
+    }
+    Cookies.set('semester1Selections', JSON.stringify(semester1Selections), options);
+    Cookies.set('semester2Selections', JSON.stringify(semester2Selections), options);
+  }, [gradeLevel, semester1Selections, semester2Selections]);
+
   const getCourseOptions = (grade: string): CourseOption[] => {
     const options: CourseOption[] = [];
-    
+
     if (grade === '9') {
       options.push(
         { label: 'English', courses: filterCourses(courses.filter(c => c.department === 'English')) },
@@ -39,7 +56,7 @@ function Planner() {
         { label: 'Science', courses: filterCourses(courses.filter(c => c.department === 'Science')) },
         { label: 'Social Studies', courses: filterCourses(courses.filter(c => c.department === 'Social Studies')) },
         { label: 'World Language', courses: filterCourses(courses.filter(c => c.department === 'World Language')) },
-        { label: 'Elective', courses: filterCourses(courses) },
+        { label: 'Health/PE', courses: filterCourses(courses.filter(c => c.department === 'Health/PE')) },
         { label: 'Elective', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
@@ -50,8 +67,8 @@ function Planner() {
         { label: 'Math', courses: filterCourses(courses.filter(c => c.department === 'Math')) },
         { label: 'Science', courses: filterCourses(courses.filter(c => c.department === 'Science')) },
         { label: 'Social Studies', courses: filterCourses(courses.filter(c => c.department === 'Social Studies')) },
-        { label: 'Elective', courses: filterCourses(courses) },
-        { label: 'Elective', courses: filterCourses(courses) },
+        { label: 'World Language', courses: filterCourses(courses.filter(c => c.department === 'World Language')) },
+        { label: 'Health/PE', courses: filterCourses(courses.filter(c => c.department === 'Health/PE')) },
         { label: 'Elective', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
         { label: '(Alternate Elective)', courses: filterCourses(courses) },
@@ -97,50 +114,26 @@ function Planner() {
   };
 
   const filterCourses = (coursesToFilter: any[]) => {
-    return coursesToFilter
-      .filter(course => {
-        const matchesDepartment = !selectedDepartment || course.department === selectedDepartment;
-        const matchesNCAA = !filterNCAA || course.ncaa === "Yes";
-        const matchesVPAA = !filterVPAA || course.vpaa === "Yes";
-        const matchesPrerequisites = !filterPrerequisites || course.prerequisites.toLowerCase() === "none";
-
-        const classTypeFilters = [
-          filterRegular && "Regular",
-          filterHonors && "Honors",
-          filterAP && "AP",
-          filterIB && "IB"
-        ].filter(Boolean);
-
-        const matchesClassType = classTypeFilters.length === 0 || classTypeFilters.includes(course.type);
-
-        return matchesDepartment && matchesNCAA && matchesVPAA && matchesPrerequisites && matchesClassType;
-      })
-      .map(c => c.name);
+    return coursesToFilter.map(c => c.name);
   };
 
-  // Handle search input
-  const handleSearchInput = (query: string) => {
-    setSearchQuery(query);
-    if (query.trim() === '') {
+  const handleSearchInput = (value: string) => {
+    setSearchQuery(value);
+    if (value.trim() === '') {
       setSearchResults([]);
       setShowSearchResults(false);
       return;
     }
 
     const filteredCourses = courses.filter(course =>
-      course.name.toLowerCase().includes(query.toLowerCase())
+      course.name.toLowerCase().includes(value.toLowerCase())
     );
+
     setSearchResults(filteredCourses);
     setShowSearchResults(true);
   };
 
-  // Handle course selection from search
   const handleCourseSelect = (selectedCourse: any) => {
-    if (!gradeLevel) {
-      alert('Please select a grade level first');
-      return;
-    }
-
     const courseOptions = getCourseOptions(gradeLevel);
     let placed = false;
 
@@ -157,115 +150,21 @@ function Planner() {
     // Check if this is a year-long course
     const isYearLong = selectedCourse.duration?.startsWith('Two');
 
-    // Try to place in the appropriate department slot first
+    // First try to place in the matching department slot
     courseOptions.forEach((option, index) => {
-      if (option.label === selectedCourse.department && !placed) {
-        if (isPairedCourse) {
-          const selectedLetter = selectedCourse.name.slice(-1);
-          if (selectedLetter === 'A') {
-            // For 'A' courses, try to place in semester 1 with 'B' in semester 2
-            if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-              const newSem1 = [...semester1Selections];
-              const newSem2 = [...semester2Selections];
-              newSem1[index] = selectedCourse.name;
-              newSem2[index] = pairedCourseName!;
-              setSemester1Selections(newSem1);
-              setSemester2Selections(newSem2);
-              placed = true;
-            }
-          } else {
-            // For 'B' courses, try to place in semester 2 with 'A' in semester 1
-            if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-              const newSem1 = [...semester1Selections];
-              const newSem2 = [...semester2Selections];
-              newSem1[index] = pairedCourseName!;
-              newSem2[index] = selectedCourse.name;
-              setSemester1Selections(newSem1);
-              setSemester2Selections(newSem2);
-              placed = true;
-            }
-          }
-        } else if (isYearLong) {
-          // For year-long courses, try to place in both semesters
-          if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-            const newSem1 = [...semester1Selections];
-            const newSem2 = [...semester2Selections];
-            newSem1[index] = selectedCourse.name;
-            newSem2[index] = selectedCourse.name;
-            setSemester1Selections(newSem1);
-            setSemester2Selections(newSem2);
-            placed = true;
-          }
-        } else {
-          // Handle single-semester courses as before
-          if (semester1Selections[index] === '') {
-            const newSelections = [...semester1Selections];
-            newSelections[index] = selectedCourse.name;
-            setSemester1Selections(newSelections);
-            placed = true;
-          } else if (semester2Selections[index] === '') {
-            const newSelections = [...semester2Selections];
-            newSelections[index] = selectedCourse.name;
-            setSemester2Selections(newSelections);
-            placed = true;
-          }
+      if (!placed && option.label === selectedCourse.department) {
+        if (tryPlaceCourse(index, selectedCourse)) {
+          placed = true;
         }
       }
     });
 
-    // If not placed and not an alternate, try to place in an empty elective slot
-    if (!placed && !courseOptions[courseOptions.length - 1].label.includes('Alternate')) {
+    // If not placed, try to place in an elective slot
+    if (!placed) {
       courseOptions.forEach((option, index) => {
-        if (option.label === 'Elective' && !placed) {
-          if (isPairedCourse) {
-            const selectedLetter = selectedCourse.name.slice(-1);
-            if (selectedLetter === 'A') {
-              // For 'A' courses, try to place in semester 1 with 'B' in semester 2
-              if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-                const newSem1 = [...semester1Selections];
-                const newSem2 = [...semester2Selections];
-                newSem1[index] = selectedCourse.name;
-                newSem2[index] = pairedCourseName!;
-                setSemester1Selections(newSem1);
-                setSemester2Selections(newSem2);
-                placed = true;
-              }
-            } else {
-              // For 'B' courses, try to place in semester 2 with 'A' in semester 1
-              if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-                const newSem1 = [...semester1Selections];
-                const newSem2 = [...semester2Selections];
-                newSem1[index] = pairedCourseName!;
-                newSem2[index] = selectedCourse.name;
-                setSemester1Selections(newSem1);
-                setSemester2Selections(newSem2);
-                placed = true;
-              }
-            }
-          } else if (isYearLong) {
-            // For year-long courses, try to place in both semesters
-            if (semester1Selections[index] === '' && semester2Selections[index] === '') {
-              const newSem1 = [...semester1Selections];
-              const newSem2 = [...semester2Selections];
-              newSem1[index] = selectedCourse.name;
-              newSem2[index] = selectedCourse.name;
-              setSemester1Selections(newSem1);
-              setSemester2Selections(newSem2);
-              placed = true;
-            }
-          } else {
-            // Handle single-semester courses as before
-            if (semester1Selections[index] === '') {
-              const newSelections = [...semester1Selections];
-              newSelections[index] = selectedCourse.name;
-              setSemester1Selections(newSelections);
-              placed = true;
-            } else if (semester2Selections[index] === '') {
-              const newSelections = [...semester2Selections];
-              newSelections[index] = selectedCourse.name;
-              setSemester2Selections(newSelections);
-              placed = true;
-            }
+        if (!placed && option.label === 'Elective') {
+          if (tryPlaceCourse(index, selectedCourse)) {
+            placed = true;
           }
         }
       });
@@ -286,11 +185,72 @@ function Planner() {
     setShowSearchResults(false);
   };
 
-  // Reset selections when grade level changes
-  useEffect(() => {
-    setSemester1Selections(Array(7).fill(''));
-    setSemester2Selections(Array(7).fill(''));
-  }, [gradeLevel]);
+  // Helper function to try placing a course in a specific slot
+  const tryPlaceCourse = (index: number, selectedCourse: any) => {
+    const isPairedCourse = /[AB]$/.test(selectedCourse.name);
+    let pairedCourseName: string | null = null;
+    
+    if (isPairedCourse) {
+      const baseCourseName = selectedCourse.name.slice(0, -1);
+      const currentLetter = selectedCourse.name.slice(-1);
+      pairedCourseName = `${baseCourseName}${currentLetter === 'A' ? 'B' : 'A'}`;
+    }
+
+    // Check if this is a year-long course
+    const isYearLong = selectedCourse.duration?.startsWith('Two');
+
+    if (isPairedCourse) {
+      const selectedLetter = selectedCourse.name.slice(-1);
+      if (selectedLetter === 'A') {
+        // For 'A' courses, try to place in semester 1 with 'B' in semester 2
+        if (semester1Selections[index] === '' && semester2Selections[index] === '') {
+          const newSem1 = [...semester1Selections];
+          const newSem2 = [...semester2Selections];
+          newSem1[index] = selectedCourse.name;
+          newSem2[index] = pairedCourseName!;
+          setSemester1Selections(newSem1);
+          setSemester2Selections(newSem2);
+          return true;
+        }
+      } else {
+        // For 'B' courses, try to place in semester 2 with 'A' in semester 1
+        if (semester1Selections[index] === '' && semester2Selections[index] === '') {
+          const newSem1 = [...semester1Selections];
+          const newSem2 = [...semester2Selections];
+          newSem1[index] = pairedCourseName!;
+          newSem2[index] = selectedCourse.name;
+          setSemester1Selections(newSem1);
+          setSemester2Selections(newSem2);
+          return true;
+        }
+      }
+    } else if (isYearLong) {
+      // For year-long courses, try to place in both semesters
+      if (semester1Selections[index] === '' && semester2Selections[index] === '') {
+        const newSem1 = [...semester1Selections];
+        const newSem2 = [...semester2Selections];
+        newSem1[index] = selectedCourse.name;
+        newSem2[index] = selectedCourse.name;
+        setSemester1Selections(newSem1);
+        setSemester2Selections(newSem2);
+        return true;
+      }
+    } else {
+      // Handle single-semester courses
+      if (semester1Selections[index] === '') {
+        const newSelections = [...semester1Selections];
+        newSelections[index] = selectedCourse.name;
+        setSemester1Selections(newSelections);
+        return true;
+      } else if (semester2Selections[index] === '') {
+        const newSelections = [...semester2Selections];
+        newSelections[index] = selectedCourse.name;
+        setSemester2Selections(newSelections);
+        return true;
+      }
+    }
+    return false;
+  };
 
   const handleSemester1Change = (index: number, value: string) => {
     const newSelections = [...semester1Selections];
@@ -304,8 +264,96 @@ function Planner() {
     setSemester2Selections(newSelections);
   };
 
+  const handleClear = () => {
+    setSemester1Selections(Array(9).fill(''));
+    setSemester2Selections(Array(9).fill(''));
+    setGradeLevel('');
+    
+    // Remove cookies
+    Cookies.remove('gradeLevel');
+    Cookies.remove('semester1Selections');
+    Cookies.remove('semester2Selections');
+  };
+
+  const handlePrint = () => {
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    // Generate the HTML content
+    const content = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Course Selections</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              max-width: 800px;
+              margin: 0 auto;
+            }
+            h1 {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .course-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 30px;
+            }
+            .course-table th,
+            .course-table td {
+              border: 1px solid #ccc;
+              padding: 10px;
+              text-align: left;
+            }
+            .course-table th {
+              background-color: #f5f5f5;
+            }
+            .grade-level {
+              margin-bottom: 20px;
+              font-size: 1.2em;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Course Selections</h1>
+          ${gradeLevel ? `<div class="grade-level">Grade Level: ${gradeLevel}th Grade</div>` : ''}
+          <table class="course-table">
+            <thead>
+              <tr>
+                <th>Course Type</th>
+                <th>Semester 1</th>
+                <th>Semester 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${courseOptions.map((option, index) => `
+                <tr>
+                  <td>${option.label}</td>
+                  <td>${semester1Selections[index] || '-'}</td>
+                  <td>${semester2Selections[index] || '-'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+
+    // Write the content to the new window and print
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   const courseOptions = getCourseOptions(gradeLevel);
-  const departments = [...new Set(courses.map(course => course.department))].sort();
+
+  useEffect(() => {
+    setSemester1Selections(Array(9).fill(''));
+    setSemester2Selections(Array(9).fill(''));
+  }, [gradeLevel]);
 
   return (
     <div className="main-content">
@@ -333,85 +381,6 @@ function Planner() {
               ))}
             </div>
           )}
-        </div>
-
-        <div className="filter-group">
-          <label htmlFor="department">Department</label>
-          <select
-            id="department"
-            value={selectedDepartment}
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-          >
-            <option value="">All Departments</option>
-            {departments.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="filter-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterNCAA}
-              onChange={(e) => setFilterNCAA(e.target.checked)}
-            />
-            NCAA
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterVPAA}
-              onChange={(e) => setFilterVPAA(e.target.checked)}
-            />
-            VPAA
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterPrerequisites}
-              onChange={(e) => setFilterPrerequisites(e.target.checked)}
-            />
-            No Prerequisites
-          </label>
-        </div>
-
-        <div className="filter-group">
-          <h4>Class Type</h4>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterRegular}
-              onChange={(e) => setFilterRegular(e.target.checked)}
-            />
-            Regular
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterHonors}
-              onChange={(e) => setFilterHonors(e.target.checked)}
-            />
-            Honors
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterAP}
-              onChange={(e) => setFilterAP(e.target.checked)}
-            />
-            AP
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterIB}
-              onChange={(e) => setFilterIB(e.target.checked)}
-            />
-            IB
-          </label>
         </div>
       </div>
 
@@ -464,6 +433,14 @@ function Planner() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="button-container">
+            <button className="clear-button" onClick={handleClear}>
+              Clear All
+            </button>
+            <button className="print-button" onClick={handlePrint}>
+              Print Schedule
+            </button>
           </div>
         </div>
       </div>

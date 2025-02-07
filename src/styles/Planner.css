@@ -177,6 +177,52 @@
   position: relative;
 }
 
+.planner-container .button-container {
+  display: flex;
+  justify-content: left;
+  margin-top: 30px;
+  padding: 0;
+  background: transparent;
+}
+
+.planner-container .button-container:hover {
+  animation: none;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.clear-button,
+.print-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: var(--bold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 10px;
+}
+
+.clear-button {
+  background-color: var(--dark-gray);
+  color: var(--white);
+  border: 1px solid var(--light-gray);
+}
+
+.clear-button:hover {
+  background-color: var(--light-gray);
+}
+
+.print-button {
+  background-color: var(--light-orange);
+  color: var(--black);
+}
+
+.print-button:hover {
+  background-color: var(--dark-orange);
+  color: var(--white);
+}
+
 @media (max-width: 768px) {
   .semester-grid {
     grid-template-columns: 1fr;
