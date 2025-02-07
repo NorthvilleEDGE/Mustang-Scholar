@@ -229,6 +229,7 @@ function Courses() {
             <option value="type">Type</option>
           </select>
         </div>
+        <button className="catalog-button" onClick={() => window.open('https://docs.google.com/document/d/1Nt5_1fPDQnlCZjp6ipPruma0XuEq_juW2NJEnMKodww/edit?tab=t.0', '_blank')}>Course Catalog</button>
       </div>
       <div className="home-container">
         {loading ? (
