@@ -6,7 +6,6 @@ function Header() {
     <header className="header">
       <Link to="/" className="title">Mustang Scholar</Link>
       <div className="header-buttons">
-        <Link to="/">Home</Link>
         <Link to="/courses">Courses</Link>
         <Link to="/clubs">Clubs</Link>
         <Link to="/planner">Planner</Link>
