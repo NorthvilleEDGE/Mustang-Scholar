@@ -9,6 +9,8 @@ import AboutUs from './pages/AboutUs'
 import ChatButton from './components/ChatButton'
 import ChatPanel from './components/ChatPanel'
 import { DataProvider } from './context/DataContext'
+import Feedback from './pages/Feedback';
+
 
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/planner" element={<Planner />} />
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/feedback" element={<Feedback />} />
         </Routes>
         <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
         <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />

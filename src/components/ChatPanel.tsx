@@ -39,7 +39,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
 
   const generateResponse = async (userInput: string): Promise<string> => {
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash"});
       
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
@@ -55,9 +55,8 @@ ${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].jo
       let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
 You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
 Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
-Constantly remind the user that you are an AI assistant, and students should always talk to their counselor for official advice and information. Decisions should be made with the help of a counselor, not an AI.
-Make sure not to provide redundant information. If the user asks about a club or course that has already been discussed, you can refer back to the previous information. Do not repeat information in your responses.
-If the user says they will base their decision on your advice, berate them to consult with their counselor before making any final decisions.
+Occasionally remind the user that you are an AI assistant, and official decisions should be made by a school counselor. Counselors are not involved in clubs, as they are student-led.
+Do not remind the user every message about counselors, only do so when you mention specific courses or decisions. Do not be annoying with this reminder.
 
 This is the current conversation:
 ${conversationHistory}
