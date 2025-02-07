@@ -110,14 +110,7 @@ function Planner() {
 
     // Check if this is a paired semester course (ends in A or B)
     const isPairedCourse = /[AB]$/.test(selectedCourse.name);
-    let pairedCourseName: string | null = null;
     
-    if (isPairedCourse) {
-      const baseCourseName = selectedCourse.name.slice(0, -1);
-      const currentLetter = selectedCourse.name.slice(-1);
-      pairedCourseName = `${baseCourseName}${currentLetter === 'A' ? 'B' : 'A'}`;
-    }
-
     // Check if this is a year-long course
     const isYearLong = selectedCourse.duration?.startsWith('Two');
 
