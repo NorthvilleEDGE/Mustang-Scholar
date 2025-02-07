@@ -10,8 +10,8 @@ function Header() {
         <Link to="/courses">Courses</Link>
         <Link to="/clubs">Clubs</Link>
         <Link to="/planner">Planner</Link>
+        <Link to="/feedback">Feedback</Link>
         <Link to="/about">About Us</Link>
-        <Link to="/feedback">Feedback</Link> {/* Ensure this link redirects to the Feedback page */}
       </div>
     </header>
   );
