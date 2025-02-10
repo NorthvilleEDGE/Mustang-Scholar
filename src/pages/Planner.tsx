@@ -355,7 +355,7 @@ function Planner() {
                 value={gradeLevel}
                 onChange={(e) => setGradeLevel(e.target.value)}
               >
-                <option value="">Select a grade for a grade-specific class template</option>
+                <option value="">No Grade Template</option>
                 <option value="9">9th Grade</option>
                 <option value="10">10th Grade</option>
                 <option value="11">11th Grade</option>
