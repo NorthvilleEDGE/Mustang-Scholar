@@ -219,7 +219,7 @@
 }
 
 .print-button:hover {
-  background-color: var(--dark-orange);
+  background-color: var(--orange);
   color: var(--white);
 }
 
