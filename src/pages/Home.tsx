@@ -5,10 +5,10 @@ function Home() {
   return (
     <div className="home-container">
       <div className="homeHeader">
-        <h1>INTRODUCING <span className="gradientText">MUSTANG SCHOLAR</span></h1>
+        <h1>Introducing</h1>
+        <h1 className="gradientText" style={{ fontSize: '80px' }}>MUSTANG SCHOLAR</h1>
         <h2>NHS course & club recommender made for students, by students.</h2>
       </div>
-
       <section className="description-section">
         <div className="content-box">
           <p>
