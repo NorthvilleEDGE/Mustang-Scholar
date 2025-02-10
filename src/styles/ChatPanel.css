@@ -114,14 +114,14 @@
 }
 
 .message.bot .message-content {
-  background-color: var(--dark-orange);
+  background-color: var(--transparent-orange);
   color: white;
   border-bottom-left-radius: 5px;
 }
 
 .message.user .message-content {
-  background-color: #4a4a4a;
-  color: white;
+  background-color: var(--gray);
+  color: var(--white);
   border-bottom-right-radius: 5px;
 }
 
@@ -176,14 +176,14 @@
   border-radius: 20px;
   padding: 10px 15px;
   border: none;
-  background-color: #4a4a4a;
-  color: white;
+  background-color: var(--gray);
+  color: var(--white);
   font-size: 0.9rem;
   width: 100%;
 }
 
 .message-input::placeholder {
-  color: #888;
+  color: var(--light-gray);
 }
 
 .message-input:focus {
