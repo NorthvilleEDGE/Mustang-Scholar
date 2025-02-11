@@ -36,7 +36,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-
+//had to fix occasionally
   const generateResponse = async (userInput: string): Promise<string> => {
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash"});
