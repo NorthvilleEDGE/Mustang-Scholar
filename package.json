@@ -12,11 +12,13 @@
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@types/js-cookie": "^3.0.6",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

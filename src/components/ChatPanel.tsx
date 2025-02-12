@@ -4,6 +4,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanel.css';
 import { useData } from '../context/DataContext';
+import { logMessage } from '../api';
+import { v4 as uuidv4 } from 'uuid';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -27,7 +29,20 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [clientId, setClientId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Get or create client ID on component mount
+    const storedClientId = localStorage.getItem('mustangScholarClientId');
+    if (storedClientId) {
+      setClientId(storedClientId);
+    } else {
+      const newClientId = uuidv4();
+      localStorage.setItem('mustangScholarClientId', newClientId);
+      setClientId(newClientId);
+    }
+  }, []); // Only run once on mount
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -100,23 +115,25 @@ ${conversationHistory}
     setIsTyping(true);
 
     try {
-      const response = await generateResponse(inputText);
-      const botResponse = {
-        text: response,
-        sender: 'bot' as const,
-        id: Date.now() + 1
-      };
+      const botResponse = await generateResponse(inputText);
+      const botMessage = { text: botResponse, sender: 'bot' as const, id: Date.now() };
+      setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
-      setMessages(prev => [...prev, botResponse]);
+
+      // Log the message to Google Sheets with client ID
+      await logMessage({
+        timestamp: new Date().toISOString(),
+        ipAddress: window.location.hostname,
+        userMessage: inputText,
+        botMessage: botResponse,
+        clientId: clientId,
+      });
     } catch (error) {
       console.error('Error:', error);
-      setIsTyping(false);
-      setMessages(prev => [...prev, {
-        text: "I apologize, but I encountered an error. Please try again.",
-        sender: 'bot',
-        id: Date.now() + 1
-      }]);
+      setMessages(prev => [...prev, { text: 'Sorry, I encountered an error. Please try again.', sender: 'bot', id: Date.now() }]);
     }
+
+    setIsTyping(false);
   };
 
   const toggleExpand = () => {
