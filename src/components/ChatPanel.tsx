@@ -58,7 +58,14 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
       
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
-      const coursesInfo = courses.map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`).join('\n');
+      const important = `
+IMPORTANT:
+If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response. For example, if the user asks about clubs, type "<CLUBS>" as your response.
+Clubs:
+<CLUBS>
+Departments:
+${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].join('\n')}
+`
 
       let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
 You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
@@ -66,21 +73,31 @@ Keep responses concise and friendly. Ensure all URLs for clubs are embedded in c
 Occasionally remind the user that you are an AI assistant, and official decisions should be made by a school counselor. Counselors are not involved in clubs, as they are student-led.
 Do not remind the user every message about counselors, only do so when you mention specific courses or decisions. Do not be annoying with this reminder.
 
-Course Information:
-${coursesInfo}
-
-Club Information:
-${clubsInfo}
-
 This is the current conversation:
 ${conversationHistory}
-{user: ${userInput}}`;
+{user: ${userInput}}
+`;
 
       console.log(prompt);
       
-      let result = await model.generateContent(prompt);
+      let result = await model.generateContent(prompt + important);
       let response = await result.response;
       let responseText = response.text();
+
+      if (responseText.includes('<CLUBS>')) {
+        prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+      }
+      const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
+      for (const tag of departmentTags) {
+        if (responseText.includes(tag)) {
+          const departmentCourses = courses.filter(course => `<${course.department.toUpperCase()}>` === tag)
+            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`).join('\n');
+          prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+        }
+      }
+      result = await model.generateContent(prompt);
+      response = await result.response;
+      responseText = response.text();
 
       return responseText;
 
