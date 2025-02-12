@@ -26,12 +26,36 @@ export interface Course {
   video: string,
 }
 
+interface LogMessageParams {
+  timestamp: string;
+  ipAddress: string;
+  userMessage: string;
+  botMessage: string;
+  clientId: string;
+}
+
 export const fetchClubs = async (): Promise<Club[]> => {
   return fetchData<Club>('Clubs');
 };
 
 export const fetchCourses = async (): Promise<Course[]> => {
   return fetchData<Course>('Courses');
+};
+
+export const logMessage = async (params: LogMessageParams): Promise<void> => {
+  try {
+    const queryParams = new URLSearchParams({
+      sheet: 'Messages',
+      ...params
+    });
+    
+    const response = await fetch(`${SHEETS_API_URL}?${queryParams.toString()}`);
+    if (!response.ok) {
+      throw new Error('Failed to log message');
+    }
+  } catch (error) {
+    console.error('Error logging message:', error);
+  }
 };
 
 const fetchData = async <T>(sheetName: string): Promise<T[]> => {
