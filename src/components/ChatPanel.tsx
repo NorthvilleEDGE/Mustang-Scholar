@@ -54,7 +54,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
 
   const generateResponse = async (userInput: string): Promise<string> => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite-preview-02-05"});
       
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
@@ -86,7 +86,7 @@ ${conversationHistory}
 
     } catch (error) {
       console.error('Error generating response:', error);
-      return 'I apologize, but I encountered an error. Please try again.';
+      return 'We are currently receiving unusually high demand. Please try again later.';
     }
   };
 
