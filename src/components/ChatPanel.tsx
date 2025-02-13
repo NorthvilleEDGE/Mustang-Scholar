@@ -103,7 +103,7 @@ ${conversationHistory}
 
     } catch (error) {
       console.error('Error generating response:', error);
-      return 'We are currently receiving unusually high demand. Please try again later.';
+      return 'We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th.';
     }
   };
 
@@ -134,7 +134,7 @@ ${conversationHistory}
       console.error('Error:', error);
       setIsTyping(false);
       setMessages(prev => [...prev, {
-        text: "We are currently receiving unusually high demand. Please try again later.",
+        text: "We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th.",
         sender: 'bot',
         id: Date.now() + 1
       }]);
