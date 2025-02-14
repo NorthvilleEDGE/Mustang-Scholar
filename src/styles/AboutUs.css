@@ -98,11 +98,15 @@
   }
 
   .about-header h1 {
-    font-size: 2rem;
+    font-size: calc(2rem + 1vw);
   }
 
   .content-box {
     padding: 20px;
+  }
+
+  .content-box h2 {
+    font-size: calc(1.5rem + 1vw);
   }
 }
 
@@ -112,11 +116,15 @@
   }
 
   .about-header h1 {
-    font-size: 1.5rem;
+    font-size: calc(1.5rem + 1vw);
   }
 
   .content-box {
     padding: 15px;
+  }
+
+  .content-box h2 {
+    font-size: calc(1.25rem + 1vw);
   }
 
   .edge-logo {
@@ -130,7 +138,7 @@
   }
 
   .about-header h1 {
-    font-size: 2rem;
+    font-size: calc(2rem + 1vw);
   }
 
   .content-box {
@@ -149,6 +157,10 @@
   .edge-logo {
     max-width: 200px;
   }
+
+  .content-box h2 {
+    font-size: calc(1.5rem + 1vw);
+  }
 }
 
 @media (max-width: 480px) and (orientation: portrait) {
@@ -157,7 +169,7 @@
   }
 
   .about-header h1 {
-    font-size: 1.5rem;
+    font-size: calc(1.5rem + 1vw);
   }
 
   .content-box {
@@ -166,5 +178,9 @@
 
   .edge-logo {
     max-width: 150px;
+  }
+
+  .content-box h2 {
+    font-size: calc(1.25rem + 1vw);
   }
 }

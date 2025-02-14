@@ -57,21 +57,27 @@
 
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     padding: 10px 20px;
   }
 
   .header .title {
-    font-size: 24px;
+    font-size: calc(1.5rem + 1vw);
+    text-align: center;
+    flex: 1 100%;
   }
 
   .header-buttons {
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
+    flex: 1 100%;
+    justify-content: center;
   }
 
   .header-buttons a {
-    font-size: 18px;
+    font-size: calc(1rem + 0.5vw);
   }
 }
 
@@ -81,44 +87,19 @@
   }
 
   .header .title {
-    font-size: 20px;
-  }
-
-  .header-buttons a {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 768px) and (orientation: portrait) {
-  .header {
-    flex-direction: column;
-    padding: 10px 20px;
-  }
-
-  .header .title {
-    font-size: 24px;
+    font-size: calc(1.25rem + 1vw);
+    text-align: center;
+    flex: 1 100%;
   }
 
   .header-buttons {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    gap: 5px;
+    flex: 1 100%;
+    justify-content: center;
   }
 
   .header-buttons a {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) and (orientation: portrait) {
-  .header {
-    padding: 5px 10px;
-  }
-
-  .header .title {
-    font-size: 20px;
-  }
-
-  .header-buttons a {
-    font-size: 16px;
+    font-size: calc(0.875rem + 0.5vw);
   }
 }

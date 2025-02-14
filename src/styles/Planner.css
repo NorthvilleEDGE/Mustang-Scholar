@@ -235,12 +235,36 @@
   }
 
   .semester-headers h2 {
-    font-size: 1.2rem;
+    font-size: calc(1rem + 0.5vw);
+  }
+
+  .semester h2 {
+    font-size: calc(1rem + 0.5vw);
   }
 
   .semester-column select {
     padding: 8px;
     font-size: 0.9rem;
+  }
+
+  .planner-container {
+    padding: 10px;
+  }
+
+  .planner-form {
+    padding: 20px;
+  }
+
+  .grade-select,
+  .semester-column select,
+  .course-select select {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .semester h2,
+  .semester-headers h2 {
+    font-size: 1.2rem;
   }
 }
 
@@ -250,42 +274,7 @@
     grid-template-columns: 100px 1fr 1fr;
     gap: 8px;
   }
-}
 
-@media (max-width: 768px) {
-  .planner-container {
-    padding: 10px;
-  }
-
-  .planner-form {
-    padding: 20px;
-  }
-
-  .semester-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .semester-headers,
-  .course-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .semester-headers h2,
-  .semester h2 {
-    font-size: 1.2rem;
-  }
-
-  .grade-select,
-  .semester-column select,
-  .course-select select {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
   .planner-container {
     padding: 5px;
   }
@@ -300,9 +289,12 @@
     gap: 8px;
   }
 
-  .semester-headers h2,
+  .semester-headers h2 {
+    font-size: calc(0.875rem + 0.5vw);
+  }
+
   .semester h2 {
-    font-size: 1rem;
+    font-size: calc(0.875rem + 0.5vw);
   }
 
   .grade-select,

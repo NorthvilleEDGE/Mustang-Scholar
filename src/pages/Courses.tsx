@@ -34,6 +34,7 @@ function Courses() {
   const [filterHonors, setFilterHonors] = useState(false);
   const [filterAP, setFilterAP] = useState(false);
   const [filterIB, setFilterIB] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -107,129 +108,136 @@ function Courses() {
 
   return (
     <div className="main-content">
-      <div className="sidebar">
-        <div className="filter-group">
-          <label htmlFor="search">Search</label>
-          <input
-            type="text"
-            id="search"
-            className="search-input"
-            placeholder="Search courses..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="filter-group">
-          <label htmlFor="department">Department</label>
-          <select
-            id="department"
-            className="department-select"
-            value={selectedDepartment}
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-          >
-            <option value="">All Departments</option>
-            {departments.map((dept) => (
-              <option key={dept} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterNCAA}
-              onChange={(e) => setFilterNCAA(e.target.checked)}
-            />
-            NCAA
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterVPAA}
-              onChange={(e) => setFilterVPAA(e.target.checked)}
-            />
-            VPAA
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterPrerequisites}
-              onChange={(e) => setFilterPrerequisites(e.target.checked)}
-            />
-            No Prerequisites
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterVideo}
-              onChange={(e) => setFilterVideo(e.target.checked)}
-            />
-            Video Available
-          </label>
-        </div>
-        <div className="filter-group">
-          <h4>Class Type</h4>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterRegular}
-              onChange={(e) => setFilterRegular(e.target.checked)}
-            />
-            Regular
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterHonors}
-              onChange={(e) => setFilterHonors(e.target.checked)}
-            />
-            Honors
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterAP}
-              onChange={(e) => setFilterAP(e.target.checked)}
-            />
-            AP
-          </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={filterIB}
-              onChange={(e) => setFilterIB(e.target.checked)}
-            />
-            IB
-          </label>
-        </div>
-        <div className="filter-group">
-          <label htmlFor="duration">Duration</label>
-          <select
-            id="duration"
-            className="department-select"
-            value={filterDuration}
-            onChange={(e) => setFilterDuration(e.target.value)}
-          >
-            <option value="">All</option>
-            <option value="One">1 Semester</option>
-            <option value="Two">2 Semesters</option>
-          </select>
-        </div>
-        <h3>Sort By</h3>
-        <div className="sort-group">
-          <select
-            id="sort"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-          >
-            <option value="name">Name</option>
-            <option value="number">Department</option>
-            <option value="type">Type</option>
-          </select>
-        </div>
-        <button className="catalog-button" onClick={() => window.open('https://docs.google.com/document/d/1Nt5_1fPDQnlCZjp6ipPruma0XuEq_juW2NJEnMKodww/edit?tab=t.0', '_blank')}>Course Catalog</button>
+      <div className={`sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
+        <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+          {sidebarOpen ? '<<' : '>>'}
+        </button>
+        {sidebarOpen && (
+          <>
+            <div className="filter-group">
+              <label htmlFor="search">Search</label>
+              <input
+                type="text"
+                id="search"
+                className="search-input"
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="filter-group">
+              <label htmlFor="department">Department</label>
+              <select
+                id="department"
+                className="department-select"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
+                <option value="">All Departments</option>
+                {departments.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="filter-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterNCAA}
+                  onChange={(e) => setFilterNCAA(e.target.checked)}
+                />
+                NCAA
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterVPAA}
+                  onChange={(e) => setFilterVPAA(e.target.checked)}
+                />
+                VPAA
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterPrerequisites}
+                  onChange={(e) => setFilterPrerequisites(e.target.checked)}
+                />
+                No Prerequisites
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterVideo}
+                  onChange={(e) => setFilterVideo(e.target.checked)}
+                />
+                Video Available
+              </label>
+            </div>
+            <div className="filter-group">
+              <h4>Class Type</h4>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterRegular}
+                  onChange={(e) => setFilterRegular(e.target.checked)}
+                />
+                Regular
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterHonors}
+                  onChange={(e) => setFilterHonors(e.target.checked)}
+                />
+                Honors
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterAP}
+                  onChange={(e) => setFilterAP(e.target.checked)}
+                />
+                AP
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={filterIB}
+                  onChange={(e) => setFilterIB(e.target.checked)}
+                />
+                IB
+              </label>
+            </div>
+            <div className="filter-group">
+              <label htmlFor="duration">Duration</label>
+              <select
+                id="duration"
+                className="department-select"
+                value={filterDuration}
+                onChange={(e) => setFilterDuration(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="One">1 Semester</option>
+                <option value="Two">2 Semesters</option>
+              </select>
+            </div>
+            <h3>Sort By</h3>
+            <div className="sort-group">
+              <select
+                id="sort"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <option value="name">Name</option>
+                <option value="number">Department</option>
+                <option value="type">Type</option>
+              </select>
+            </div>
+            <button className="catalog-button" onClick={() => window.open('https://docs.google.com/document/d/1Nt5_1fPDQnlCZjp6ipPruma0XuEq_juW2NJEnMKodww/edit?tab=t.0', '_blank')}>Course Catalog</button>
+          </>
+        )}
       </div>
       <div className="home-container">
         {loading ? (
