@@ -92,4 +92,34 @@
   .edge-logo {
     max-width: 200px;
   }
+
+  .about-container {
+    padding: 10px;
+  }
+
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .content-box {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding: 5px;
+  }
+
+  .about-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .content-box {
+    padding: 15px;
+  }
+
+  .edge-logo {
+    max-width: 150px;
+  }
 }

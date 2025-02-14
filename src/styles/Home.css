@@ -173,4 +173,47 @@
     .homeHeader h2 {
         font-size: 20px;
     }
+
+    .homeBody {
+        width: 80%;
+        padding: 10px;
+    }
+
+    .text-content {
+        padding: 15px;
+    }
+
+    .feature-svg {
+        max-width: 200px;
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .homeHeader h1,
+    .homeHeader h1 span {
+        font-size: 30px;
+    }
+
+    .homeHeader h2 {
+        font-size: 18px;
+    }
+
+    .homeBody {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .content-box {
+        padding: 15px;
+    }
+
+    .text-content {
+        padding: 10px;
+    }
+
+    .feature-svg {
+        max-width: 150px;
+        max-height: 150px;
+    }
 }

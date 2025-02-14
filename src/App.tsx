@@ -11,7 +11,6 @@ import ChatPanel from './components/ChatPanel'
 import { DataProvider } from './context/DataContext'
 import { ThemeProvider } from './context/ThemeContext'
 import Feedback from './pages/Feedback';
-import MobileWarning from './components/MobileWarning';
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -25,7 +24,6 @@ function App() {
       <DataProvider>
         <Router>
           <Header />
-          <MobileWarning />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
