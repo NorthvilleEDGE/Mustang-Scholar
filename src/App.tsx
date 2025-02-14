@@ -11,7 +11,6 @@ import ChatPanel from './components/ChatPanel'
 import { DataProvider } from './context/DataContext'
 import { ThemeProvider } from './context/ThemeContext'
 import Feedback from './pages/Feedback';
-import MobileWarning from './components/MobileWarning';
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -25,15 +24,16 @@ function App() {
       <DataProvider>
         <Router>
           <Header />
-          <MobileWarning />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/clubs" element={<Clubs />} />
-            <Route path="/planner" element={<Planner />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/feedback" element={<Feedback />} />
-          </Routes>
+          <div className="responsive-container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/clubs" element={<Clubs />} />
+              <Route path="/planner" element={<Planner />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/feedback" element={<Feedback />} />
+            </Routes>
+          </div>
           <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
           <ChatPanel isOpen={isChatOpen} onClose={toggleChat} />
         </Router>

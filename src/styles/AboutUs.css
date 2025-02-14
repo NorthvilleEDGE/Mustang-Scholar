@@ -92,4 +92,79 @@
   .edge-logo {
     max-width: 200px;
   }
+
+  .about-container {
+    padding: 10px;
+  }
+
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .content-box {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding: 5px;
+  }
+
+  .about-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .content-box {
+    padding: 15px;
+  }
+
+  .edge-logo {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .about-container {
+    padding: 10px;
+  }
+
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .content-box {
+    padding: 20px;
+  }
+
+  .team-content {
+    flex-direction: column;
+  }
+
+  .logo-box {
+    width: 100%;
+    min-height: 200px;
+  }
+
+  .edge-logo {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+  .about-container {
+    padding: 5px;
+  }
+
+  .about-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .content-box {
+    padding: 15px;
+  }
+
+  .edge-logo {
+    max-width: 150px;
+  }
 }
