@@ -7,7 +7,6 @@ import { logMessage } from '../api';
 import { v4 as uuidv4 } from 'uuid';
 import OpenAI from 'openai';
 
-
 interface ChatPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,6 +35,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
   const [isTyping, setIsTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [clientId, setClientId] = useState<string>('');
+  const [currentStreamedMessage, setCurrentStreamedMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,7 +57,8 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-  const generateResponse = async (userInput: string): Promise<string> => {
+
+  const generateResponse = async (userInput: string): Promise<void> => {
     try {
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
@@ -81,7 +82,7 @@ ${conversationHistory}
 {user: ${userInput}}
 `;
 
-      let result = await client.chat.completions.create({
+      const stream = await client.chat.completions.create({
         model: 'grok-2-latest',
         messages: [
           {
@@ -93,53 +94,69 @@ ${conversationHistory}
             content: userInput
           }
         ],
+        stream: true,
       });
 
-      let responseText = result.choices[0].message.content || '';
+      let fullResponse = '';
+      setCurrentStreamedMessage('');
 
-      // Check if we need to add club information
-      if (responseText.includes('<CLUBS>')) {
-        prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        fullResponse += content;
+        setCurrentStreamedMessage(prev => prev + content);
       }
 
-      // Check if we need to add department course information
-      const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
-      let needsReprompt = false;
-
-      for (const tag of departmentTags) {
-        if (responseText.includes(tag)) {
-          const departmentCourses = courses
-            .filter(course => `<${course.department.toUpperCase()}>` === tag)
-            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`)
-            .join('\n');
-          prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+      // Check if we need to add club information or department information
+      if (fullResponse.includes('<CLUBS>') || fullResponse.includes('<')) {
+        let needsReprompt = false;
+        
+        if (fullResponse.includes('<CLUBS>')) {
+          prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
           needsReprompt = true;
+        }
+
+        const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
+        for (const tag of departmentTags) {
+          if (fullResponse.includes(tag)) {
+            const departmentCourses = courses
+              .filter(course => `<${course.department.toUpperCase()}>` === tag)
+              .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`)
+              .join('\n');
+            prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+            needsReprompt = true;
+          }
+        }
+
+        if (needsReprompt) {
+          setCurrentStreamedMessage('');
+          const secondStream = await client.chat.completions.create({
+            model: 'grok-2-latest',
+            messages: [
+              {
+                role: "system",
+                content: prompt
+              },
+              {
+                role: "user",
+                content: userInput
+              }
+            ],
+            stream: true,
+          });
+
+          for await (const chunk of secondStream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            setCurrentStreamedMessage(prev => prev + content);
+          }
         }
       }
 
-      // If we added any additional information, make another API call
-      if (needsReprompt || responseText.includes('<CLUBS>')) {
-        result = await client.chat.completions.create({
-          model: 'grok-2-latest',
-          messages: [
-            {
-              role: "system",
-              content: prompt
-            },
-            {
-              role: "user",
-              content: userInput
-            }
-          ],
-        });
-        responseText = result.choices[0].message.content || 'Sorry, I was unable to generate a response.';
-      }
-
-      return responseText;
+      // Final message will be added by the handleSendMessage function
+      return;
 
     } catch (error) {
       console.error('Error generating response:', error);
-      return 'We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th.';
+      throw error;
     }
   };
 
@@ -150,33 +167,35 @@ ${conversationHistory}
     const userMessage = { text: inputText, sender: 'user' as const, id: Date.now() };
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
-    setIsTyping(true);
-
+    
     try {
-      const botResponse = await generateResponse(inputText);
-      const botMessage = { text: botResponse, sender: 'bot' as const, id: Date.now() };
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
+      // Add a placeholder message for the streaming response
+      const botMessageId = Date.now() + 1;
+      setMessages(prev => [...prev, { text: '', sender: 'bot', id: botMessageId }]);
+      
+      await generateResponse(inputText);
+      
+      // Update the final message
+      setMessages(prev => prev.map(msg => 
+        msg.id === botMessageId ? { ...msg, text: currentStreamedMessage } : msg
+      ));
 
       // Log the message to Google Sheets with client ID
       await logMessage({
         timestamp: new Date().toISOString(),
         ipAddress: window.location.hostname,
         userMessage: inputText,
-        botMessage: botResponse,
+        botMessage: currentStreamedMessage,
         clientId: clientId,
       });
     } catch (error) {
       console.error('Error:', error);
-      setIsTyping(false);
       setMessages(prev => [...prev, {
         text: "We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th.",
         sender: 'bot',
         id: Date.now() + 1
       }]);
     }
-
-    setIsTyping(false);
   };
 
   const toggleExpand = () => {
@@ -201,11 +220,15 @@ ${conversationHistory}
           {messages.map((message) => (
             <div key={message.id} className={`message ${message.sender} animate-message`}>
               <div className="message-content">
-                <ReactMarkdown>{message.text}</ReactMarkdown>
+                <ReactMarkdown>
+                  {message.id === messages[messages.length - 1]?.id && message.sender === 'bot' 
+                    ? currentStreamedMessage || message.text 
+                    : message.text}
+                </ReactMarkdown>
               </div>
             </div>
           ))}
-          {isTyping && <TypingIndicator />}
+          {isTyping && !currentStreamedMessage && <TypingIndicator />}
           <div ref={messagesEndRef} />
         </div>
 
