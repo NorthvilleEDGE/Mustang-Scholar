@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanel.css';
 import { useData } from '../context/DataContext';
 import { logMessage } from '../api';
 import { v4 as uuidv4 } from 'uuid';
+import OpenAI from 'openai';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 interface ChatPanelProps {
   isOpen: boolean;
@@ -22,6 +20,14 @@ interface Message {
 }
 
 function ChatPanel({ isOpen }: ChatPanelProps) {
+  const GROK_API_KEY = import.meta.env.VITE_GROK_API_KEY;
+  
+  const client = new OpenAI({
+    apiKey: GROK_API_KEY,
+    baseURL: 'https://api.x.ai/v1',
+    dangerouslyAllowBrowser: true,
+  });
+
   const { clubs, courses } = useData();
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
@@ -54,8 +60,6 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
 
   const generateResponse = async (userInput: string): Promise<string> => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite-preview-02-05"});
-      
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
       const important = `
@@ -78,26 +82,59 @@ ${conversationHistory}
 {user: ${userInput}}
 `;
 
-      console.log(prompt);
-      
-      let result = await model.generateContent(prompt + important);
-      let response = await result.response;
-      let responseText = response.text();
+      let result = await client.chat.completions.create({
+        model: 'grok-2-latest',
+        messages: [
+          {
+            role: "system",
+            content: prompt + important
+          },
+          {
+            role: "user",
+            content: userInput
+          }
+        ],
+      });
 
+      let responseText = result.choices[0].message.content || '';
+
+      // Check if we need to add club information
       if (responseText.includes('<CLUBS>')) {
         prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
       }
+
+      // Check if we need to add department course information
       const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
+      let needsReprompt = false;
+
       for (const tag of departmentTags) {
         if (responseText.includes(tag)) {
-          const departmentCourses = courses.filter(course => `<${course.department.toUpperCase()}>` === tag)
-            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`).join('\n');
+          const departmentCourses = courses
+            .filter(course => `<${course.department.toUpperCase()}>` === tag)
+            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`)
+            .join('\n');
           prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+          needsReprompt = true;
         }
       }
-      result = await model.generateContent(prompt);
-      response = await result.response;
-      responseText = response.text();
+
+      // If we added any additional information, make another API call
+      if (needsReprompt || responseText.includes('<CLUBS>')) {
+        result = await client.chat.completions.create({
+          model: 'grok-2-latest',
+          messages: [
+            {
+              role: "system",
+              content: prompt
+            },
+            {
+              role: "user",
+              content: userInput
+            }
+          ],
+        });
+        responseText = result.choices[0].message.content || 'Sorry, I was unable to generate a response.';
+      }
 
       return responseText;
 
