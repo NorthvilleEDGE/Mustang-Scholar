@@ -62,26 +62,51 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
       
-      // Create a list of all course names for pattern matching
+      // Create a list of all course names and club names for pattern matching
       const courseNames = courses.map(course => course.name);
       const coursePatterns = courseNames.map(name => `<${name.toUpperCase().replace(/\s+/g, '_')}>`);
+      
+      const clubNames = clubs.map(club => club.name);
+      const clubPatterns = clubNames.map(name => `<CLUB_${name.toUpperCase().replace(/\s+/g, '_')}>`);
       
       const important = `
 IMPORTANT:
 If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response.
 
-If asking about clubs, type "<CLUBS>" as your response.
+If asking about all clubs, type "<CLUBS>" as your response.
+If asking about specific clubs, use the club tags below.
 If asking about specific courses, use the course tags below.
 
 Available Course Tags:
 ${coursePatterns.join('\n')}
+
+Available Club Tags:
+${clubPatterns.join('\n')}
 `
 
       let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
-You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
-Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
+
+CRITICAL INSTRUCTIONS:
+1. ONLY provide information that is explicitly present in the club and course information sections.
+2. If you are unsure about ANY detail, state "I don't have that specific information" rather than making assumptions.
+3. NEVER make assumptions about:
+   - Meeting times or locations
+   - Future events or activities
+   - Requirements or prerequisites (unless explicitly stated)
+   - Contact information not provided
+   - Any details not directly given in the data
+4. When mentioning URLs or links:
+   - ONLY use URLs that are explicitly provided in the club or course information
+   - Format them as clickable markdown links
+   - Never create or assume URLs
+5. If a user asks about something not covered in the provided data:
+   - Clearly state that you don't have that information
+   - Suggest they contact the relevant club officer or advisor (if their contact info is provided)
+   - Or recommend they speak with their counselor for course-related questions
+
+Keep responses concise and friendly. Only include URLs that you got from the club or course information sections.
 Occasionally remind the user that you are an AI assistant, and official decisions should be made by a school counselor. Counselors are not involved in clubs, as they are student-led.
-Do not remind the user every message about counselors, only do so when you mention specific courses or decisions. Do not be annoying with this reminder.
+Do not remind the user every message about counselors, only do so when you mention specific courses or decisions.
 
 This is the current conversation:
 ${conversationHistory}
@@ -101,6 +126,7 @@ ${conversationHistory}
           }
         ],
         stream: true,
+        temperature: 0,
       });
 
       let fullResponse = '';
@@ -120,6 +146,23 @@ ${conversationHistory}
       
       if (fullResponse.includes('<CLUBS>')) {
         prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+        needsReprompt = true;
+      }
+
+      // Check for any specific club tags in the response
+      const matchedClubs = clubPatterns.filter(pattern => 
+        fullResponse.includes(pattern)
+      ).map(pattern => 
+        pattern.slice(6, -1).replace(/_/g, ' ').toLowerCase()
+      );
+
+      if (matchedClubs.length > 0) {
+        const clubDetails = clubs
+          .filter(club => matchedClubs.includes(club.name.toLowerCase()))
+          .map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`)
+          .join('\n');
+        
+        prompt += `\n\nSpecific Club Information:\n${clubDetails}\n\n`;
         needsReprompt = true;
       }
 
@@ -155,6 +198,7 @@ ${conversationHistory}
             }
           ],
           stream: true,
+          temperature: 0,
         });
 
         for await (const chunk of secondStream) {
