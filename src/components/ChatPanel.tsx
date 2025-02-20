@@ -32,7 +32,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
   ]);
   const [inputText, setInputText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [clientId, setClientId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -190,12 +190,21 @@ ${conversationHistory}
     try {
       await generateResponse(inputText, botMessageId);
 
+      // Get the updated messages to find the bot's response
+      const updatedMessages = await new Promise<Message[]>(resolve => {
+        setMessages(prev => {
+          resolve(prev);
+          return prev;
+        });
+      });
+      const botResponse = updatedMessages.find(msg => msg.id === botMessageId)?.text || '';
+
       // Log the message to Google Sheets with client ID
       await logMessage({
         timestamp: new Date().toISOString(),
         ipAddress: window.location.hostname,
         userMessage: inputText,
-        botMessage: messages[messages.length - 1].text,
+        botMessage: botResponse,
         clientId: clientId,
       });
     } catch (error) {
