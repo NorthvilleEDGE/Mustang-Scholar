@@ -73,7 +73,7 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
 IMPORTANT:
 If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response.
 
-If asking about all clubs, type "<CLUBS>" as your response.
+If asking about clubs, type "<CLUBS>" as your response.
 If asking about specific clubs, use the club tags below.
 If asking about specific courses, use the course tags below.
 
