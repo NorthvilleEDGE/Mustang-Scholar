@@ -8,6 +8,21 @@
     height: var(--header-height);
 }
 
+.header .name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.header p {
+    border: 2px solid var(--light-orange);
+    padding: 2px 7px;
+    font-size: 15px;
+    border-radius: 50vmin;
+    color: var(--light-orange);
+}
+
 .header .title {
     color: var(--white);
     font-size: 30px;
