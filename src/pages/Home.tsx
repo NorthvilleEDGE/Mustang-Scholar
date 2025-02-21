@@ -57,6 +57,9 @@ function Home() {
           </div>
         </div>
       </section>
+      <div className="mobile-warning">
+        This website is not mobile-friendly yet. Please tilt your device or use a computer for the best experience.
+      </div>
     </div>
   );
 }

@@ -50,3 +50,27 @@
 .typing-indicator .dots span:nth-child(3) {
   animation-delay: 0s;
 }
+
+@media (max-width: 768px) {
+  .typing-indicator .message-content {
+    padding: 8px 12px;
+    font-size: calc(0.8rem + 0.2vw);
+  }
+
+  .typing-indicator .dots span {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .typing-indicator .message-content {
+    padding: 6px 10px;
+    font-size: calc(0.7rem + 0.2vw);
+  }
+
+  .typing-indicator .dots span {
+    width: 5px;
+    height: 5px;
+  }
+}

@@ -158,7 +158,45 @@ select:hover {
 }
 
 @media (max-width: 768px) {
-  .mobile-warning {
-    display: block;
+  * {
+    font-size: calc(0.875rem + 0.2vw);
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  * {
+    font-size: calc(0.75rem + 0.2vw);
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  * {
+    font-size: calc(0.875rem + 0.2vw);
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+  * {
+    font-size: calc(0.75rem + 0.2vw);
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
   }
 }

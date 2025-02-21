@@ -167,10 +167,161 @@
 
     .homeHeader h1,
     .homeHeader h1 span {
-        font-size: 40px;
+        font-size: calc(2.5rem + 1vw);
     }
 
     .homeHeader h2 {
-        font-size: 20px;
+        font-size: calc(1.25rem + 0.5vw);
     }
+
+    .homeBody {
+        width: 80%;
+        padding: 10px;
+    }
+
+    .text-content {
+        padding: 15px;
+    }
+
+    .feature-svg {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    .mobile-warning {
+        display: block;
+        text-align: center;
+        background: var(--dark-gray);
+        color: var(--light-orange);
+        padding: 10px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .homeHeader h1,
+    .homeHeader h1 span {
+        font-size: calc(2rem + 1vw);
+    }
+
+    .homeHeader h2 {
+        font-size: calc(1rem + 0.5vw);
+    }
+
+    .homeBody {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .content-box {
+        padding: 15px;
+    }
+
+    .text-content {
+        padding: 10px;
+    }
+
+    .feature-svg {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .mobile-warning {
+        display: block;
+        text-align: center;
+        background: var(--dark-gray);
+        color: var(--light-orange);
+        padding: 10px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .homeHeader h1,
+  .homeHeader h1 span {
+    font-size: 40px;
+  }
+
+  .homeHeader h2 {
+    font-size: 20px;
+  }
+
+  .homeBody {
+    width: 80%;
+    padding: 10px;
+  }
+
+  .content-box {
+    padding: 20px;
+  }
+
+  .courses-container,
+  .clubs-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .text-content {
+    padding: 15px;
+  }
+
+  .feature-svg {
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .mobile-warning {
+    display: block;
+    text-align: center;
+    background: var(--dark-gray);
+    color: var(--light-orange);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+  .homeHeader h1,
+  .homeHeader h1 span {
+    font-size: 30px;
+  }
+
+  .homeHeader h2 {
+    font-size: 18px;
+  }
+
+  .homeBody {
+    width: 100%;
+    padding: 5px;
+  }
+
+  .content-box {
+    padding: 15px;
+  }
+
+  .text-content {
+    padding: 10px;
+  }
+
+  .feature-svg {
+    max-width: 150px;
+    max-height: 150px;
+  }
+
+  .mobile-warning {
+    display: block;
+    text-align: center;
+    background: var(--dark-gray);
+    color: var(--light-orange);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+}
+
+.mobile-warning {
+  display: none;
 }

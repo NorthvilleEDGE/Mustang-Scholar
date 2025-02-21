@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import TypingIndicator from './TypingIndicator';
 import '../styles/ChatPanel.css';
 import { useData } from '../context/DataContext';
 import { logMessage } from '../api';
 import { v4 as uuidv4 } from 'uuid';
-
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+import OpenAI from 'openai';
 
 interface ChatPanelProps {
   isOpen: boolean;
@@ -22,12 +19,20 @@ interface Message {
 }
 
 function ChatPanel({ isOpen }: ChatPanelProps) {
+  const GROK_API_KEY = import.meta.env.VITE_GROK_API_KEY;
+  
+  const client = new OpenAI({
+    apiKey: GROK_API_KEY,
+    baseURL: 'https://api.x.ai/v1',
+    dangerouslyAllowBrowser: true,
+  });
+
   const { clubs, courses } = useData();
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hi! I\'m your Mustang Scholar AI Assistant. How can I help you today?', sender: 'bot', id: 1 }
   ]);
   const [inputText, setInputText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [clientId, setClientId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -52,58 +57,162 @@ function ChatPanel({ isOpen }: ChatPanelProps) {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const generateResponse = async (userInput: string): Promise<string> => {
+  const generateResponse = async (userInput: string, botMessageId: number): Promise<void> => {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash"});
-      
       const conversationHistory = messages.map(message => `{${message.sender}: ${message.text}}`).join('\n');
       const clubsInfo = clubs.map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`).join('\n');
+      
+      // Create a list of all course names and club names for pattern matching
+      const courseNames = courses.map(course => course.name);
+      const coursePatterns = courseNames.map(name => `<${name.toUpperCase().replace(/\s+/g, '_')}>`);
+      
+      const clubNames = clubs.map(club => club.name);
+      const clubPatterns = clubNames.map(name => `<CLUB_${name.toUpperCase().replace(/\s+/g, '_')}>`);
+      
       const important = `
 IMPORTANT:
-If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response. For example, if the user asks about clubs, type "<CLUBS>" as your response.
-Clubs:
-<CLUBS>
-Departments:
-${[...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))].join('\n')}
+If a user asks about club or course information, DO NOT PROVIDE A RESPONSE TO THE USER. Instead, type any relevant tags as your response.
+
+If asking about clubs, type "<CLUBS>" as your response.
+If asking about specific clubs, use the club tags below.
+If asking about specific courses, use the course tags below.
+
+Available Course Tags:
+${coursePatterns.join('\n')}
+
+Available Club Tags:
+${clubPatterns.join('\n')}
 `
 
       let prompt = `You are a helpful assistant for Mustang Scholar, a website that helps high school students find and choose courses and clubs. 
-You should provide personalized recommendations and advice about courses and extracurricular activities. Do not start with a greeting.
-Keep responses concise and friendly. Ensure all URLs for clubs are embedded in clickable hyperlinks. Use descriptive text for the link instead of displaying the URL as plain text.
+
+CRITICAL INSTRUCTIONS:
+1. ONLY provide information that is explicitly present in the club and course information sections.
+2. If you are unsure about ANY detail, state "I don't have that specific information" rather than making assumptions.
+3. NEVER make assumptions about:
+   - Meeting times or locations
+   - Future events or activities
+   - Requirements or prerequisites (unless explicitly stated)
+   - Contact information not provided
+   - Any details not directly given in the data
+4. When mentioning URLs or links:
+   - ONLY use URLs that are explicitly provided in the club or course information
+   - Format them as clickable markdown links
+   - Never create or assume URLs
+5. If a user asks about something not covered in the provided data:
+   - Clearly state that you don't have that information
+   - Suggest they contact the relevant club officer or advisor (if their contact info is provided)
+   - Or recommend they speak with their counselor for course-related questions
+
+Keep responses concise and friendly. Only include URLs that you got from the club or course information sections.
 Occasionally remind the user that you are an AI assistant, and official decisions should be made by a school counselor. Counselors are not involved in clubs, as they are student-led.
-Do not remind the user every message about counselors, only do so when you mention specific courses or decisions. Do not be annoying with this reminder.
+Do not remind the user every message about counselors, only do so when you mention specific courses or decisions.
 
 This is the current conversation:
 ${conversationHistory}
 {user: ${userInput}}
 `;
 
-      console.log(prompt);
-      
-      let result = await model.generateContent(prompt + important);
-      let response = await result.response;
-      let responseText = response.text();
+      const stream = await client.chat.completions.create({
+        model: 'grok-2-latest',
+        messages: [
+          {
+            role: "system",
+            content: prompt + important
+          },
+          {
+            role: "user",
+            content: userInput
+          }
+        ],
+        stream: true,
+        temperature: 0,
+      });
 
-      if (responseText.includes('<CLUBS>')) {
-        prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+      let fullResponse = '';
+      let currentResponse = '';
+
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        fullResponse += content;
+        currentResponse += content;
+        setMessages(prev => prev.map(msg => 
+          msg.id === botMessageId ? { ...msg, text: currentResponse } : msg
+        ));
       }
-      const departmentTags = [...new Set(courses.map(course => `<${course.department.toUpperCase()}>`))];
-      for (const tag of departmentTags) {
-        if (responseText.includes(tag)) {
-          const departmentCourses = courses.filter(course => `<${course.department.toUpperCase()}>` === tag)
-            .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`).join('\n');
-          prompt += `\n\nCourses Information for ${tag}:\n${departmentCourses}\n\n`;
+
+      // Check if we need to add club information or course information
+      let needsReprompt = false;
+      
+      if (fullResponse.includes('<CLUBS>')) {
+        prompt += `\n\nClubs Information:\n${clubsInfo}\n\n`;
+        needsReprompt = true;
+      }
+
+      // Check for any specific club tags in the response
+      const matchedClubs = clubPatterns.filter(pattern => 
+        fullResponse.includes(pattern)
+      ).map(pattern => 
+        pattern.slice(6, -1).replace(/_/g, ' ').toLowerCase()
+      );
+
+      if (matchedClubs.length > 0) {
+        const clubDetails = clubs
+          .filter(club => matchedClubs.includes(club.name.toLowerCase()))
+          .map(club => `{${club.name} - ${club.description} - Officer: ${club.officer} - Officer Email: ${club.email} - Advisor: ${club.advisor} - Flyer URL: ${club.flyer}}`)
+          .join('\n');
+        
+        prompt += `\n\nSpecific Club Information:\n${clubDetails}\n\n`;
+        needsReprompt = true;
+      }
+
+      // Check for any course tags in the response
+      const matchedCourses = coursePatterns.filter(pattern => 
+        fullResponse.includes(pattern)
+      ).map(pattern => 
+        pattern.slice(1, -1).replace(/_/g, ' ').toLowerCase()
+      );
+
+      if (matchedCourses.length > 0) {
+        const courseDetails = courses
+          .filter(course => matchedCourses.includes(course.name.toLowerCase()))
+          .map(course => `{${course.name} - Description: ${course.description} - Department: ${course.department} - Course Number: ${course.number} - Prerequisites: ${course.prerequisites} - Duration: ${course.duration} - Video Link: ${course.video}}`)
+          .join('\n');
+        
+        prompt += `\n\nCourse Information:\n${courseDetails}\n\n`;
+        needsReprompt = true;
+      }
+
+      if (needsReprompt) {
+        currentResponse = '';
+        const secondStream = await client.chat.completions.create({
+          model: 'grok-2-latest',
+          messages: [
+            {
+              role: "system",
+              content: prompt
+            },
+            {
+              role: "user",
+              content: userInput
+            }
+          ],
+          stream: true,
+          temperature: 0,
+        });
+
+        for await (const chunk of secondStream) {
+          const content = chunk.choices[0]?.delta?.content || '';
+          currentResponse += content;
+          setMessages(prev => prev.map(msg => 
+            msg.id === botMessageId ? { ...msg, text: currentResponse } : msg
+          ));
         }
       }
-      result = await model.generateContent(prompt);
-      response = await result.response;
-      responseText = response.text();
-
-      return responseText;
 
     } catch (error) {
       console.error('Error generating response:', error);
-      return 'We are currently receiving unusually high demand. Please try again later.';
+      throw error;
     }
   };
 
@@ -112,15 +221,27 @@ ${conversationHistory}
     if (inputText.trim() === '') return;
 
     const userMessage = { text: inputText, sender: 'user' as const, id: Date.now() };
-    setMessages(prev => [...prev, userMessage]);
+    const botMessageId = Date.now() + 1;
+    
+    // Add both messages immediately
+    setMessages(prev => [...prev, 
+      userMessage,
+      { text: '', sender: 'bot', id: botMessageId }
+    ]);
+    
     setInputText('');
-    setIsTyping(true);
-
+    
     try {
-      const botResponse = await generateResponse(inputText);
-      const botMessage = { text: botResponse, sender: 'bot' as const, id: Date.now() };
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
+      await generateResponse(inputText, botMessageId);
+
+      // Get the updated messages to find the bot's response
+      const updatedMessages = await new Promise<Message[]>(resolve => {
+        setMessages(prev => {
+          resolve(prev);
+          return prev;
+        });
+      });
+      const botResponse = updatedMessages.find(msg => msg.id === botMessageId)?.text || '';
 
       // Log the message to Google Sheets with client ID
       await logMessage({
@@ -132,15 +253,12 @@ ${conversationHistory}
       });
     } catch (error) {
       console.error('Error:', error);
-      setIsTyping(false);
-      setMessages(prev => [...prev, {
-        text: "We are currently receiving unusually high demand. Please try again later.",
-        sender: 'bot',
-        id: Date.now() + 1
-      }]);
+      setMessages(prev => prev.map(msg => 
+        msg.id === botMessageId 
+          ? { ...msg, text: "We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th." }
+          : msg
+      ));
     }
-
-    setIsTyping(false);
   };
 
   const toggleExpand = () => {

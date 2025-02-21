@@ -69,3 +69,52 @@
 .theme-toggle:hover {
     transform: scale(1.1);
 }
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 20px;
+  }
+
+  .header .title {
+    font-size: calc(1.5rem + 1vw);
+    text-align: center;
+    flex: 1 100%;
+  }
+
+  .header-buttons {
+    flex-direction: row;
+    gap: 10px;
+    flex: 1 100%;
+    justify-content: center;
+  }
+
+  .header-buttons a {
+    font-size: calc(1rem + 0.5vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 5px 10px;
+  }
+
+  .header .title {
+    font-size: calc(1.25rem + 1vw);
+    text-align: center;
+    flex: 1 100%;
+  }
+
+  .header-buttons {
+    flex-direction: row;
+    gap: 5px;
+    flex: 1 100%;
+    justify-content: center;
+  }
+
+  .header-buttons a {
+    font-size: calc(0.875rem + 0.5vw);
+  }
+}
