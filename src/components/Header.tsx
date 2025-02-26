@@ -7,7 +7,10 @@ function Header() {
 
   return (
     <header className="header">
-      <Link to="/" className="title">Mustang Scholar</Link>
+      <div className="name">
+        <Link to="/" className="title">Mustang Scholar</Link>
+        <p>Beta</p>
+      </div>
       <div className="header-buttons">
         <Link to="/courses">Courses</Link>
         <Link to="/clubs">Clubs</Link>
