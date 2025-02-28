@@ -255,7 +255,7 @@ ${conversationHistory}
       console.error('Error:', error);
       setMessages(prev => prev.map(msg => 
         msg.id === botMessageId 
-          ? { ...msg, text: "We apologize, but our chatbot has recently been experiencing errors. We are aware of this issue and expect to have it resolved by Friday the 14th." }
+          ? { ...msg, text: "We are experiencing unusually high demand. Please try again later. If this persists, please contact us through the feedback page." }
           : msg
       ));
     }
