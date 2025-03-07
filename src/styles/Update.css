@@ -1,0 +1,61 @@
+/* Update.css */
+.update-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--dark-gray);
+  }
+  
+  .login-container, .update-content {
+    background-color: var(--black);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  h2 {
+    color: var(--light-orange);
+    margin-bottom: 20px;
+  }
+  
+  .password-input, .login-button, .update-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .password-input {
+    background-color: var(--darkest-gray);
+    color: var(--white);
+  }
+  
+  .login-button, .update-button {
+    background-color: var(--orange);
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-button:hover, .update-button:hover {
+    background-color: var(--light-orange);
+  }
+  
+  .progress-bar {
+    width: 100%;
+    background-color: var(--darkest-gray);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  
+  .progress {
+    height: 20px;
+    background-color: var(--light-orange);
+    width: 0;
+    transition: width 0.3s ease;
+  }

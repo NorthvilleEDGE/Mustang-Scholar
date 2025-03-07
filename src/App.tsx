@@ -11,6 +11,7 @@ import ChatPanel from './components/ChatPanel'
 import { DataProvider } from './context/DataContext'
 import { ThemeProvider } from './context/ThemeContext'
 import Feedback from './pages/Feedback';
+import Update from './pages/Update';
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -32,6 +33,7 @@ function App() {
               <Route path="/planner" element={<Planner />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/feedback" element={<Feedback />} />
+              <Route path="/update" element={<Update />} />
             </Routes>
           </div>
           <ChatButton isOpen={isChatOpen} onClick={toggleChat} />
