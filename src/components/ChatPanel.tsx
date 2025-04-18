@@ -114,7 +114,7 @@ ${conversationHistory}
 `;
 
       const stream = await client.chat.completions.create({
-        model: 'grok-2-latest',
+        model: 'grok-3-mini-latest',
         messages: [
           {
             role: "system",
