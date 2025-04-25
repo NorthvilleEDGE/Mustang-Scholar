@@ -1,70 +1,107 @@
-import { useState, ChangeEvent } from 'react';
+// filepath: /Users/pedrocandidodesousa/Documents/EDGE/Mustang-Scholar/src/pages/Update.tsx
+import { useState } from 'react';
 import '../styles/Update.css';
 
+const SHEETS_API_URL = import.meta.env.VITE_SHEETS_API_URL;
+
 function Update() {
-  const [password, setPassword] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [url, setUrl] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const correctPassword = 'EngineeringDesignGrowthEmpowerment';
 
-  const handleLogin = () => {
-    if (password === 'MustangScholar') {
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === correctPassword) {
       setIsAuthenticated(true);
+      setMessage('');
     } else {
-      alert('Incorrect password');
+      setMessage('Incorrect password. Please try again.');
     }
   };
 
-  const handleUpdate = async () => {
-    setProgress(0);
-    runConverter(); // Call the converter function
-  };
+  const handleUrlSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!url.trim()) {
+      setMessage('Please enter a URL.');
+      return;
+    }
 
-  const runConverter = async () => {
+    setIsSubmitting(true);
+    
     try {
-      console.log('Starting converter...');
-      const response = await fetch('https://script.google.com/macros/s/AKfycbz-A_vsrKczRw0LeqTaerF1jpGa9gB0PGL8tF52Aebkq8XH0MM2-MLbW6N9EqV0DngDmw/exec'); // Update with your actual endpoint
-      const contentType = response.headers.get('content-type');
-      const responseText = await response.text();
-      console.log('Converter response text:', responseText);
-      if (!response.ok) {
-        throw new Error('Failed to run converter');
-      }
-      if (contentType && contentType.includes('application/json')) {
-        const data = JSON.parse(responseText);
-        console.log('Converter response:', data);
-        setProgress(100); // Assuming the update is complete
+      // Replace this URL with your actual Google App Script URL      
+      const response = await fetch(SHEETS_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+      
+      if (response.ok) {
+        setMessage('URL submitted successfully!');
+        setUrl('');
       } else {
-        console.error('Unexpected response format:', responseText);
+        setMessage('Error submitting URL. Please try again.');
       }
     } catch (error) {
-      console.error('Error running converter:', error);
+      setMessage('An error occurred. Please try again later.');
+      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="update-container">
-      {isAuthenticated ? (
-        <div className="update-content">
-          <h2>Update Page</h2>
-          <button className="update-button" onClick={handleUpdate}>Update</button>
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${progress}%` }}></div>
-          </div>
+      {!isAuthenticated ? (
+        <div className="auth-section">
+          <h1 className="gradientText">Secure Access</h1>
+          <p>Please enter the password to continue.</p>
+          <form onSubmit={handlePasswordSubmit}>
+            <div className="input-group">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="text-input"
+              />
+            </div>
+            <button type="submit" className="action-button">
+              Submit
+            </button>
+          </form>
+          {message && <p className="message error">{message}</p>}
         </div>
       ) : (
-        <div className="login-container">
-          <h2>Enter Password</h2>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            className="password-input"
-          />
-          <button onClick={handleLogin} className="login-button">Login</button>
+        <div className="content-section">
+          <h1 className="gradientText">Update System</h1>
+          <p>Enter the URL to be processed by the Google App Script.</p>
+          <form onSubmit={handleUrlSubmit}>
+            <div className="input-group">
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Enter URL"
+                className="text-input"
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="action-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit URL'}
+            </button>
+          </form>
+          {message && <p className={`message ${message.includes('success') ? 'success' : 'error'}`}>{message}</p>}
         </div>
       )}
     </div>
