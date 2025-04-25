@@ -44,7 +44,7 @@ function Update() {
       });
       
       if (response.ok) {
-        setMessage('URL submitted successfully!');
+        setMessage('URL submitted successfully! This may take us a while, check back in 20 minutes :)');
         setUrl('');
       } else {
         setMessage('Error submitting URL. Please try again.');
